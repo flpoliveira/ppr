@@ -27,4 +27,7 @@ todos os arquivos da lista voltarão para o ultimo commit
 	Baixa todos os commits da nuvem.
 6 - git push NomeRepositorio(origin) NomeDaBranch(master)
 	Envia todos os commits locais para a nuvem.
+	
+7 -  git clone https://github.com/NOMEdeUSUARIO/NOMEdoREPOSITORIO
+	Clona o repositorio da nuvem.
 
