@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotel.model;
+package hotel.model.enums;
 
 /**
  *
  * @author udesc
  */
-public class Gerente extends Funcionario{
-    
+public enum TipoFuncionario {
+    GERENTE, FUNCIONARIO;
 }
