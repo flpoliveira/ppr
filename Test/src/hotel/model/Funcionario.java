@@ -15,12 +15,17 @@ public class Funcionario {
     private Long id;
     private String cpf;
     private String nome;
+    private String telefone;
     private String senha;
     private String rg;
     private Endereco endereco;
     private Double salario;
     private Expediente expediente;
-
+    
+    public Funcionario()
+    {
+        
+    }
     public Funcionario(Long id, String cpf, String nome, String senha, String rg, Endereco endereco, Double salario, Expediente expediente)
     {
         this.id = id;
@@ -141,6 +146,20 @@ public class Funcionario {
      */
     public void setExpediente(Expediente expediente) {
         this.expediente = expediente;
+    }
+
+    /**
+     * @return the telefone
+     */
+    public String getTelefone() {
+        return telefone;
+    }
+
+    /**
+     * @param telefone the telefone to set
+     */
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
     
     
