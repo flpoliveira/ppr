@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test;
+package hotel.model.enums;
 
 /**
  *
  * @author udesc
  */
-public class Cachorro {
-    
+public enum Expediente {
+    MATUTINO, VESPERTINO, NOTURNO;
 }
