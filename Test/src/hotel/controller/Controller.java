@@ -44,13 +44,15 @@ public class Controller
                 .addPais(clienteVO.getEndereco().getPais())
                 .addRua(clienteVO.getEndereco().getRua())
                 .build();
+       
         Cliente cliente = clienteBuilder.addNome(clienteVO.getNome())
                 .addId(clienteVO.getId())
                 .addCNPJ(clienteVO.getCNPJ())
                 .addCPF(clienteVO.getCPF())
                 .addEndereco(endereco)
-                .addtelefone(clienteVO.getTelefone())
+                .addTelefone(clienteVO.getTelefone())
                 .build(clienteVO.isEhJuridico());
+         System.out.println("TELEFONE -- CONTROLLER --"+cliente.getTelefone());
         return cliente;
                 
   

@@ -33,7 +33,7 @@ public class ClienteBuilder {
         return this;
     }
     
-    public ClienteBuilder addtelefone(String telefone){
+    public ClienteBuilder addTelefone(String telefone){
         this.telefone = telefone;
         return this;
     }

@@ -54,7 +54,7 @@ public class AppUI
         String strfim = diafim+"/"+mesfim+"/"+anofim;
         SimpleDateFormat formatorfim = new SimpleDateFormat("dd/MM/yyyy");
         Date data_fim = formatorfim.parse(strfim);
-        
+        return false;
     }
     
     public boolean addEstrutura(){
@@ -111,6 +111,7 @@ public class AppUI
                 cliente.setCPF(this.scanner.next());
                 break;
         }
+        this.scanner.nextLine();
         System.out.println("Digite o numero de telefone:");
         cliente.setTelefone(this.scanner.next());
         EnderecoVO endereco = new EnderecoVO();
@@ -128,7 +129,15 @@ public class AppUI
         endereco.setPais(this.scanner.next());
         cliente.setEndereco(endereco);
         
-        return (Boolean)this.controller.execute(OperationEnum.ADDCLIENT, cliente);
+        System.out.println("Confirmando os dados do cliente:");
+        System.out.println(cliente.toString());
+        System.out.println("-------------------------------");
+        System.out.println(" 1 - Sim");
+        System.out.println(" 2 - Nao");
+        if(scanner.nextInt() == 1)
+            return (Boolean)this.controller.execute(OperationEnum.ADDCLIENT, cliente);
+        else
+            return false;
         
     }
     public boolean consultaClientes()
