@@ -5,11 +5,10 @@
  */
 package hotel.controller;
 
-/**
- *
- * @author Filipe
- */
+
 public enum OperationEnum {
-    ADDCLIENT, ADDESTRUTURA, ADDRESERVA;
-    
+
+    ADDCLIENT, GETALLCLIENTE, GETCLIENTEPERID, ADDESTRUTURA, ADDRESERVA;
+
+
 }

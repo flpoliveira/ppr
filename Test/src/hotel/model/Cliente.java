@@ -3,7 +3,6 @@ package hotel.model;
 
 public class Cliente {
 
-    private static Long ultimoId = new Long('1');
     private Long id;
     private boolean ehJuridico;
     private String CNPJ;
@@ -14,10 +13,10 @@ public class Cliente {
     
     public Cliente()
     {
-        this.id = ultimoId;
-        ultimoId++;
+
     }
     
+
     public Long getId() {
         return id;
     }

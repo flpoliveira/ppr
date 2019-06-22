@@ -119,5 +119,14 @@ public class EnderecoVO {
         this.numero = numero;
     }
    
+    public String toString()
+    {
+        String x = "Endereco";
+        x = x+"\nRua: "+this.getRua();
+        x = x+"\nNumero: "+this.getNumero();
+        x = x+"\nCidade: "+this.getCidade();
+        x = x+"\nPais: "+this.getPais();
+        return x;
+    }
     
 }

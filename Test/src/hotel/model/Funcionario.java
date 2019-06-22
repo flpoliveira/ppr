@@ -192,11 +192,11 @@ public class Funcionario {
         a.setTelefone(telefone);
         repCli.addCliente(a);
     }
-    public void consultaCliente(int id, ClienteRepository repCli){
-        Cliente a = repCli.getClientePorId(id);
-        System.out.println("Nome: "+a.getNome()+"Telefone: "+a.getTelefone()+"Endereço"+a.getEndereco());
-       // talvez precise mudar aqui ***colocar mais info
-    }
+//    public void consultaCliente(int id, ClienteRepository repCli){
+//        Cliente a = repCli.getClientePorId(id);
+//        System.out.println("Nome: "+a.getNome()+"Telefone: "+a.getTelefone()+"Endereço"+a.getEndereco());
+//       // talvez precise mudar aqui ***colocar mais info
+//    }
      
     public void ConsultaEstrutura(int id, EstruturaRepository repEst){
         Estrutura x = repEst.getEstruturaPId(id);

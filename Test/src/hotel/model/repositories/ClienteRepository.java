@@ -47,13 +47,20 @@ public class ClienteRepository {
 		}
 		return null;
 	}
-        public Cliente getClientePorId(int id){
-            for(int i = 0; i < this.Clientes.size(); i++) {
-		Cliente cli = this.Clientes.get(i);
-		if(cli.getId().equals(id)){
-                    return cli;
+        public Cliente getClientePorId(Long id){
+            for(Cliente x : this.Clientes)
+            {
+                if(x.getId() == id)
+                {
+                    return x;
                 }
+                    
             }
             return null;
+        }
+        
+        public Long IdGenerator()
+        {
+            return (long)(this.Clientes.size()+1);
         }
 }
