@@ -6,6 +6,7 @@ public class Cliente {
     private Long id;
     private boolean ehJuridico;
     private String CNPJ;
+    private String CPF;
     private String Nome;
     private String telefone;
     private Endereco endereco;
@@ -32,6 +33,20 @@ public class Cliente {
 
     public void setCNPJ(String CNPJ) {
         this.CNPJ = CNPJ;
+    }
+    
+    /**
+     * @return the CPF
+     */
+    public String getCPF() {
+        return CPF;
+    }
+
+    /**
+     * @param CPF the CPF to set
+     */
+    public void setCPF(String CPF) {
+        this.CPF = CPF;
     }
 
     public String getNome() {

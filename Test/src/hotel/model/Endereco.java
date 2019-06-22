@@ -13,6 +13,7 @@ public class Endereco {
     private Long id;
     private String cep;
     private String rua;
+    private int numero;
     private String cidade;
     private String pais;
     private String unidadeFederativa;
@@ -109,6 +110,20 @@ public class Endereco {
      */
     public void setUnidadeFederativa(String unidadeFederativa) {
         this.unidadeFederativa = unidadeFederativa;
+    }
+
+    /**
+     * @return the numero
+     */
+    public int getNumero() {
+        return numero;
+    }
+
+    /**
+     * @param numero the numero to set
+     */
+    public void setNumero(int numero) {
+        this.numero = numero;
     }
    
     

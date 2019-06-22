@@ -70,4 +70,5 @@ public class Estrutura {
     public void setTipo(TipoEstrutura tipo) {
         this.tipo = tipo;
     }
+   
 }
