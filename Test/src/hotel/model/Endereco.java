@@ -10,7 +10,6 @@ package hotel.model;
  * @author udesc
  */
 public class Endereco {
-    private static Long ultimoId = new Long('1');
     private Long id;
     private String cep;
     private String rua;
@@ -20,8 +19,7 @@ public class Endereco {
 
     public Endereco()
     {
-        this.id = ultimoId;
-        ultimoId++;
+
     }
     /*public Endereco(Long id, String cep, String rua, String cidade, String pais, String unidadeFederativa)
     {

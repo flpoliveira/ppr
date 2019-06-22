@@ -77,4 +77,18 @@ public class ClienteVO {
         this.endereco = endereco;
     }
     
+    @Override
+    public String toString()
+    {
+        String x = "ID #"+this.getId()+"\nNome: "+this.getNome();
+        if(this.ehJuridico)
+            x = x +"\nCNPJ: "+this.getCNPJ();
+        else
+            x = x+"\nCPF: "+this.getCPF();
+        x = x+"\nTelefone: "+this.getTelefone();
+        x = x+"\n"+endereco.toString();
+        return x;
+               
+             
+    }
 }

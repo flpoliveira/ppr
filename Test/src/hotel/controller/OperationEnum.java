@@ -10,5 +10,5 @@ package hotel.controller;
  * @author Filipe
  */
 public enum OperationEnum {
-    ADDCLIENT;
+    ADDCLIENT, GETALLCLIENTE, GETCLIENTEPERID;
 }
