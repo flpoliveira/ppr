@@ -5,13 +5,8 @@
  */
 package test;
 
-<<<<<<< HEAD
 import hotel.Controlers.Singleton.UserFactorySingleton;
 import hotel.Repositorios.RepositorioDeEstruturas;
-=======
-import hotel.controller.singleton.UserFactorySingleton;
-import hotel.model.repositories.EstruturaRepository;
->>>>>>> master
 import hotel.model.Cliente;
 import hotel.model.Estrutura;
 import hotel.model.Funcionario;
@@ -49,11 +44,7 @@ public class Test {
         //talvez precise fazer casting mas dai n faz sentido usar isso
         ClienteBuilder teste = new ClienteBuilder();
 
-<<<<<<< HEAD
         RepositorioDeEstruturas repEst = new RepositorioDeEstruturas();
-=======
-        EstruturaRepository repEst = new EstruturaRepository();
->>>>>>> master
         Estrutura x = new Estrutura();
         x.setTipo(TipoEstrutura.CLASSEMEDIA);
         repEst.addEstrutura(x);

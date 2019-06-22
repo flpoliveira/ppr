@@ -5,8 +5,22 @@ import java.util.Date;
 
 public class Reserva {
 
+    /**
+     * @return the hospedes
+     */
+    public ArrayList<Cliente> getHospedes() {
+        return hospedes;
+    }
+
+    /**
+     * @param hospedes the hospedes to set
+     */
+    public void setHospedes(ArrayList<Cliente> hospedes) {
+        this.hospedes = hospedes;
+    }
+
  
-    private Long id;
+    private Long id; //ok
     private Date dataInicio;
     private Date dataFim;
     private Boolean pago;

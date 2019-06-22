@@ -18,7 +18,7 @@ public class Endereco {
     private String pais;
     private String unidadeFederativa;
     
-    public Endereco(Long id, String cep, String rua, String cidade, String pais, String unidadeFederativa)
+    /*public Endereco(Long id, String cep, String rua, String cidade, String pais, String unidadeFederativa)
     {
         this.id = id;
         this.cep = cep;
@@ -27,6 +27,9 @@ public class Endereco {
         this.pais = pais;
         this.unidadeFederativa = unidadeFederativa;
     }
+    */
+
+  
     
     /**
      * @return the id

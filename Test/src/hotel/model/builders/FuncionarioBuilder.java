@@ -26,9 +26,6 @@ public  class FuncionarioBuilder {
     protected Double salario;
     protected Expediente expediente;
     
-    
-    
-    
     public FuncionarioBuilder addId(Long id){
         this.id = id;
         return this;
@@ -71,6 +68,7 @@ public  class FuncionarioBuilder {
         this.expediente = expediente;
         return this;
     }
+    
     public <T> T build(TipoFuncionario x)
     {
         Funcionario aux;
