@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotel.Controlers.Singleton;
+package hotel.controller.singleton;
 
 import hotel.model.Funcionario;
 import hotel.model.Gerente;
