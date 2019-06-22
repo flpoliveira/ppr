@@ -52,7 +52,6 @@ public class Controller
                 .addEndereco(endereco)
                 .addTelefone(clienteVO.getTelefone())
                 .build(clienteVO.isEhJuridico());
-         System.out.println("TELEFONE -- CONTROLLER --"+cliente.getTelefone());
         return cliente;
                 
   

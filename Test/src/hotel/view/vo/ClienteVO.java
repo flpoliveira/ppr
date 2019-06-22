@@ -81,7 +81,7 @@ public class ClienteVO {
     public String toString()
     {
         String x = "ID #"+this.getId()+"\nNome: "+this.getNome();
-        if(this.ehJuridico)
+        if(this.isEhJuridico())
             x = x +"\nCNPJ: "+this.getCNPJ();
         else
             x = x+"\nCPF: "+this.getCPF();

@@ -105,10 +105,12 @@ public class AppUI
             case 1:
                 System.out.println("Digite o CNPJ do cliente:");
                 cliente.setCNPJ(this.scanner.next());
+                cliente.setEhJuridico(true);
                 break;
             default:
                 System.out.println("Digite o CPF do cliente:");
                 cliente.setCPF(this.scanner.next());
+                cliente.setEhJuridico(false);
                 break;
         }
         this.scanner.nextLine();

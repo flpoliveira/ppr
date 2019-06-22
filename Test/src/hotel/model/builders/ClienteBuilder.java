@@ -63,8 +63,9 @@ public class ClienteBuilder {
             cliente.setEhJuridico(false);
         }
         cliente.setNome(this.Nome);
+        cliente.setTelefone(this.telefone);
         cliente.setEndereco(this.endereco);
-        
+        this.telefone = null;
         this.id = null;
         this.CNPJ = null;
         this.CPF = null;
