@@ -5,10 +5,17 @@
  */
 package hotel.model;
 
+<<<<<<< HEAD
 import hotel.Repositorios.RepositorioDeClientes;
 import hotel.Repositorios.RepositorioDeEstruturas;
 import hotel.Repositorios.RepositorioDeFuncionarios;
 import hotel.Repositorios.RepositorioDeReservas;
+=======
+import hotel.model.repositories.ClienteRepository;
+import hotel.model.repositories.EstruturaRepository;
+import hotel.model.repositories.FuncionarioRepository;
+import hotel.model.repositories.ReservaRepository;
+>>>>>>> master
 import hotel.model.enums.Expediente;
 import java.util.Date;
 
@@ -167,7 +174,11 @@ public class Funcionario {
         this.telefone = telefone;
     }
     
+<<<<<<< HEAD
     public boolean login (String cpf, String senha, RepositorioDeFuncionarios repFunc){
+=======
+    public boolean login (String cpf, String senha, FuncionarioRepository repFunc){
+>>>>>>> master
         Funcionario aux = repFunc.getFuncionarioPorCpf(cpf);
         if(aux == null){
             return false;// caso nao tenha um funcionario com o cpf requisitado
@@ -179,7 +190,11 @@ public class Funcionario {
             return false;// usuario ou senha incorretos;
         }
     }
+<<<<<<< HEAD
     public void cdsCliente(Long id,String nome,String telefone,boolean ehJur, String doc, Endereco endereco, RepositorioDeClientes repCli){
+=======
+    public void cdsCliente(Long id,String nome,String telefone,boolean ehJur, String doc, Endereco endereco, ClienteRepository repCli){
+>>>>>>> master
         Cliente a = new Cliente();
         if(ehJur){
             a.setCNPJ(doc);
@@ -192,22 +207,37 @@ public class Funcionario {
         a.setTelefone(telefone);
         repCli.addCliente(a);
     }
+<<<<<<< HEAD
     public void consultaCliente(int id, RepositorioDeClientes repCli){
+=======
+    public void consultaCliente(int id, ClienteRepository repCli){
+>>>>>>> master
         Cliente a = repCli.getClientePorId(id);
         System.out.println("Nome: "+a.getNome()+"Telefone: "+a.getTelefone()+"Endereço"+a.getEndereco());
        // talvez precise mudar aqui ***colocar mais info
     }
      
+<<<<<<< HEAD
     public void ConsultaEstrutura(int id, RepositorioDeEstruturas repEst){
+=======
+    public void ConsultaEstrutura(int id, EstruturaRepository repEst){
+>>>>>>> master
         Estrutura x = repEst.getEstruturaPId(id);
         if(x != null){
             System.out.println("Ativo: "+x.isAtivo()+"Andar: "+x.getAndar()+"numero: "+x.getNumero()+"Suporta: "+x.getQtdPessoas()+" Pessoas"+" Tipo: "+x.getTipo());
         }else System.out.println("Id inexistente ou incorreta");
     }
+<<<<<<< HEAD
     public void cdsReverva(Date dini, Date dfim, Cliente cli, RepositorioDeClientes repCli, RepositorioDeReservas repRes){
         // alguem implementa esse metodo aqui, nao entendi oque é pra fazer com a variavel Boolean Pago em reservas..
     }
     public void cancelaReserva(int id, RepositorioDeReservas repRes){
+=======
+    public void cdsReverva(Date dini, Date dfim, Cliente cli, ClienteRepository repCli, ReservaRepository repRes){
+        // alguem implementa esse metodo aqui, nao entendi oque é pra fazer com a variavel Boolean Pago em reservas..
+    }
+    public void cancelaReserva(int id, ReservaRepository repRes){
+>>>>>>> master
         repRes.deletaReserva(id);// exclui a reserva do array de reservas
     }
     
