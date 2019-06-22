@@ -5,8 +5,8 @@
  */
 package test;
 
-import hotel.Controlers.Singleton.UserFactorySingleton;
-import hotel.Repositorios.RepositorioDeEstruturas;
+import hotel.controler.singleton.UserFactorySingleton;
+import hotel.model.repositories.EstruturaRepository;
 import hotel.model.Cliente;
 import hotel.model.Estrutura;
 import hotel.model.Funcionario;
@@ -17,6 +17,7 @@ import hotel.model.enums.TipoEstrutura;
 import hotel.model.enums.TipoFuncionario;
 import static hotel.model.enums.TipoFuncionario.GERENTE;
 import hotel.model.factorys.AbstractGenericFactory;
+import hotel.view.AppUI;
 import java.util.ArrayList;
 
 /**
@@ -38,20 +39,22 @@ public class Test {
         System.out.println(test2.getId());
         */
         
-        UserFactorySingleton factory = UserFactorySingleton.getInstance();
-        Funcionario a = factory.newInstance(TipoFuncionario.GERENTE);//AQUI FELIPE!!! ]
-        //a.test();// mesmo criando o Gerente usando singleton ele n ta conseguindo acessar esse metodo dentro de gerente
-        //talvez precise fazer casting mas dai n faz sentido usar isso
-        ClienteBuilder teste = new ClienteBuilder();
-
-        RepositorioDeEstruturas repEst = new RepositorioDeEstruturas();
-        Estrutura x = new Estrutura();
-        x.setTipo(TipoEstrutura.CLASSEMEDIA);
-        repEst.addEstrutura(x);
-        repEst.addEstrutura(x);
-        ArrayList<Estrutura> oi = repEst.getEstruturaPTipo(TipoEstrutura.CLASSEMEDIA);
-        for(int i = 0; i<oi.size(); i++){
-            System.out.println(oi.get(i).getTipo());
-        }
+//        UserFactorySingleton factory = UserFactorySingleton.getInstance();
+//        Funcionario a = factory.newInstance(TipoFuncionario.GERENTE);//AQUI FELIPE!!! ]
+//        //a.test();// mesmo criando o Gerente usando singleton ele n ta conseguindo acessar esse metodo dentro de gerente
+//        //talvez precise fazer casting mas dai n faz sentido usar isso
+//        ClienteBuilder teste = new ClienteBuilder();
+//
+//        EstruturaRepository repEst = new EstruturaRepository();
+//        Estrutura x = new Estrutura();
+//        x.setTipo(TipoEstrutura.CLASSEMEDIA);
+//        repEst.addEstrutura(x);
+//        repEst.addEstrutura(x);
+//        ArrayList<Estrutura> oi = repEst.getEstruturaPTipo(TipoEstrutura.CLASSEMEDIA);
+//        for(int i = 0; i<oi.size(); i++){
+//            System.out.println(oi.get(i).getTipo());
+//        }
+        AppUI menu = new AppUI();
+        menu.menu();
     }
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotel.Repositorios;
+package hotel.model.repositories;
 
 import hotel.model.Cliente;
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.ArrayList;
  *
  * @author mathe
  */
-public class RepositorioDeClientes {
+public class ClienteRepository {
         private ArrayList<Cliente> Clientes;
 
-        public RepositorioDeClientes() {
+        public ClienteRepository() {
         this.Clientes = new ArrayList<>();
     }
 

@@ -1,22 +1,17 @@
 
-package hotel.model;
+package hotel.view.vo;
 
-public class Cliente {
+import hotel.model.Endereco;
 
-    private static Long ultimoId = new Long('1');
+public class ClienteVO {
+
     private Long id;
     private boolean ehJuridico;
     private String CNPJ;
     private String CPF;
     private String Nome;
     private String telefone;
-    private Endereco endereco;
-    
-    public Cliente()
-    {
-        this.id = ultimoId;
-        ultimoId++;
-    }
+    private EnderecoVO endereco;
     
     public Long getId() {
         return id;
@@ -74,11 +69,11 @@ public class Cliente {
     }
 
 
-    public Endereco getEndereco() {
+    public EnderecoVO getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(Endereco endereco) {
+    public void setEndereco(EnderecoVO endereco) {
         this.endereco = endereco;
     }
     

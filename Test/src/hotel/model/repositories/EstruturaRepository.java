@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotel.Repositorios;
+package hotel.model.repositories;
 
 import hotel.model.Estrutura;
 import hotel.model.enums.TipoEstrutura;
@@ -13,10 +13,10 @@ import java.util.ArrayList;
  *
  * @author mathe
  */
-public class RepositorioDeEstruturas {
+public class EstruturaRepository {
     private ArrayList<Estrutura> Estruturas;
 
-    public RepositorioDeEstruturas() {
+    public EstruturaRepository() {
         this.Estruturas = new ArrayList<>();
     }
 

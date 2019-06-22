@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotel.Repositorios;
+package hotel.model.repositories;
 
 import hotel.model.Funcionario;
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.ArrayList;
  *
  * @author mathe
  */
-public class RepositorioDeFuncionarios {
+public class FuncionarioRepository {
     private ArrayList<Funcionario> Funcionarios; // Gerente tambem vai alocado aqui, lembrar disso
 
-        public RepositorioDeFuncionarios() {
+        public FuncionarioRepository() {
         this.Funcionarios = new ArrayList<>();
     }
 

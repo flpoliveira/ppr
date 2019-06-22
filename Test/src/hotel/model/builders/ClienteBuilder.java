@@ -6,7 +6,7 @@ import hotel.model.Endereco;
 
 public class ClienteBuilder {
     protected Long id;
-    protected boolean ehJuridico;
+    //protected boolean ehJuridico;
     protected String CNPJ;
     protected String CPF;
     protected String Nome;
@@ -15,11 +15,6 @@ public class ClienteBuilder {
     
     public ClienteBuilder addId(Long id){
         this.id = id;
-        return this;
-    }
-    
-    public ClienteBuilder addEhJuridico(boolean ehJuridico){
-        this.ehJuridico = ehJuridico;
         return this;
     }
     
@@ -52,18 +47,25 @@ public class ClienteBuilder {
      *
      * @return
      */
-    public Cliente build(){
+    public Cliente build(boolean ehJuridico){
 
         Cliente cliente = new Cliente();
         cliente.setId(this.id);
-        cliente.setEhJuridico(this.ehJuridico);
-        cliente.setCNPJ(this.CNPJ);
-        cliente.setCPF(this.CPF);
+        //cliente.setEhJuridico(this.ehJuridico);
+        if(ehJuridico)
+        {
+            cliente.setCNPJ(this.CNPJ);
+            cliente.setEhJuridico(true);
+        }
+        else
+        {
+            cliente.setCPF(this.CPF);
+            cliente.setEhJuridico(false);
+        }
         cliente.setNome(this.Nome);
         cliente.setEndereco(this.endereco);
         
         this.id = null;
-        this.ehJuridico = false;
         this.CNPJ = null;
         this.CPF = null;
         this.Nome = null;

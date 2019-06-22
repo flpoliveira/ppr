@@ -12,7 +12,7 @@ public class EnderecoBuilder {
     protected int numero;
     protected String cidade;
     protected String pais;
-    protected String unidadeFederativa;
+
     
     public EnderecoBuilder addId(Long id){
         this.id = id;
@@ -40,11 +40,7 @@ public class EnderecoBuilder {
         this.pais = pais;
         return this;
     }
-    public EnderecoBuilder addUnidadeFederativa(String unidadeFederativa){
-        this.unidadeFederativa = unidadeFederativa;
-        return this;
-    }
-    
+
     public Endereco build(){
 
         Endereco endereco = new Endereco();
@@ -54,7 +50,7 @@ public class EnderecoBuilder {
         endereco.setNumero(this.numero);
         endereco.setCidade(this.cidade);
         endereco.setPais(this.pais);
-        endereco.setUnidadeFederativa(this.unidadeFederativa);
+
         
         this.id = null;
         this.cep = null;
@@ -62,7 +58,7 @@ public class EnderecoBuilder {
         this.numero = 0;
         this.cidade = null;
         this.pais = null;
-        this.unidadeFederativa = null;
+
         
         return endereco;
     }

@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotel.model;
+package hotel.view.vo;
 
 /**
  *
  * @author udesc
  */
-public class Endereco {
-    private static Long ultimoId = new Long('1');
+public class EnderecoVO {
     private Long id;
     private String cep;
     private String rua;
@@ -18,11 +17,7 @@ public class Endereco {
     private String cidade;
     private String pais;
 
-    public Endereco()
-    {
-        this.id = ultimoId;
-        ultimoId++;
-    }
+    
     /*public Endereco(Long id, String cep, String rua, String cidade, String pais, String unidadeFederativa)
     {
         this.id = id;
@@ -106,6 +101,9 @@ public class Endereco {
         this.pais = pais;
     }
 
+    /**
+     * @return the unidadeFederativa
+     */
 
     /**
      * @return the numero
