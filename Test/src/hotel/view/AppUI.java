@@ -7,6 +7,7 @@ package hotel.view;
 
 import hotel.controller.Controller;
 import hotel.controller.OperationEnum;
+import hotel.model.Cliente;
 import hotel.model.enums.TipoEstrutura;
 import hotel.view.vo.ClienteVO;
 import hotel.view.vo.EnderecoVO;
@@ -39,21 +40,84 @@ public class AppUI
         ReservaVO reserva = new ReservaVO();
         System.out.println("Digite o dia, mes e ano respectivamente do inicio da reserva.");
         String dia, mes, ano;
+        
         dia = scanner.next();
         mes = scanner.next();
         ano = scanner.next();
+        
         String str = dia+"/"+mes+"/"+ano;
         SimpleDateFormat formator = new SimpleDateFormat("dd/MM/yyyy");
         Date data_inicio = formator.parse(str);
         reserva.setDataInicio(data_inicio);
         System.out.println("Digite o dia, mes e ano respectivamente do fim da reserva.");
         String diafim, mesfim, anofim;
+        
         diafim = scanner.next();
         mesfim = scanner.next();
         anofim = scanner.next();
+        
         String strfim = diafim+"/"+mesfim+"/"+anofim;
         SimpleDateFormat formatorfim = new SimpleDateFormat("dd/MM/yyyy");
         Date data_fim = formatorfim.parse(strfim);
+        //Date inicio fim, pago, check-in realizado ou não, checkout, ativo,
+        
+        System.out.println("A reserva já foi paga?\n 1 - Pago\n 2 - Não pago\n");
+        switch(scanner.nextInt()){
+            case 1:
+                reserva.setAtivo(true);
+            case 2:
+                reserva.setAtivo(false);
+        }
+        System.out.println("O check-in foi realizado? 1 - Check-in realizado\n 2 - Check-in não realizado\n");
+        switch(scanner.nextInt()){
+            case 1:
+                reserva.setCheckIn(true);
+            case 2:
+                reserva.setCheckOut(false);
+        }
+        
+        reserva.setCheckOut(false); //n faz sentido fazer uma reserva q já foi feito check out
+        reserva.setAtivo(true);
+        
+        ArrayList<ClienteVO> hospedes = new ArrayList();
+        ArrayList<ClienteVO> clientes = (ArrayList<ClienteVO>) this.controller.execute(OperationEnum.GETALLCLIENTE, null);
+        
+        
+        while(true){
+            int cadas;
+            System.out.println("Deseja cadastrar um hospede? 1 - 1 para sim\n 2 - para não\n");
+            cadas = scanner.nextInt();
+            if(cadas != 1){
+                break;
+            } else {
+                System.out.println("Digite o CPF do hospede a ser adicionado a lista de hospedes.");
+                String cpf_user = scanner.nextLine();
+                for(ClienteVO x : clientes){
+                    if(x.getCPF() == cpf_user){
+                        hospedes.add(x);
+                    }
+                }
+            }
+        }
+        
+        System.out.println("Digite o cpf do pagante");
+        String cpf_user = scanner.nextLine();
+            for(ClienteVO x : clientes){
+                if(x.getCPF() == cpf_user){
+                    reserva.setPagante(x);
+                    break;
+                }
+            }
+            //falta os funcionários responsáveise a lista de estrutura
+        
+        
+        
+        
+            
+        
+        
+        
+
         return false;
     }
     
@@ -169,11 +233,9 @@ public class AppUI
             {
                 System.out.println(cliente.toString());
             }
-            
            
         }
-       
-        
+  
         return false;
     }
     
