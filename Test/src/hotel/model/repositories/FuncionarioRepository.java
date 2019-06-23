@@ -15,9 +15,10 @@ import java.util.ArrayList;
 public class FuncionarioRepository {
     private ArrayList<Funcionario> Funcionarios; // Gerente tambem vai alocado aqui, lembrar disso
 
-        public FuncionarioRepository() {
-        this.Funcionarios = new ArrayList<>();
-    }
+        public FuncionarioRepository() 
+        {
+            this.Funcionarios = new ArrayList<>();
+        }
 
 	public ArrayList<Funcionario> getFuncionarios() {
 		return this.Funcionarios;

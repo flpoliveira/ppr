@@ -59,6 +59,23 @@ public class ClienteRepository {
             return null;
         }
         
+        public Cliente getClientePorCPForCNPJ(String entrada)
+        {
+            for(Cliente x : this.Clientes)
+            {
+                if(x.isEhJuridico())
+                {
+                     if(x.getCNPJ().equals(entrada))
+                         return x;
+                }
+                else
+                    if(x.getCPF().equals(entrada))
+                        return x;
+                   
+            }
+            return null;
+        }
+        
         public Long IdGenerator()
         {
             return (long)(this.Clientes.size()+1);

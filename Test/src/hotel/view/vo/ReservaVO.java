@@ -12,23 +12,23 @@ public class ReservaVO {
     private Date dataInicio;
     private Date dataFim;
     private Boolean pago;
-    private ArrayList<Cliente> hospedes;
-    private Cliente pagante;
+    private ArrayList<ClienteVO> hospedes;
+    private ClienteVO pagante;
     private boolean checkIn;
     private boolean checkOut;
-    private Funcionario responsavelReserva;
-    private Funcionario responsavelCheckIn;
-    private Funcionario responsavelCheckOut;
-    private ArrayList<Estrutura> estrutura;
+    private FuncionarioVO responsavelReserva;
+    private FuncionarioVO responsavelCheckIn;
+    private FuncionarioVO responsavelCheckOut;
+    private ArrayList<EstruturaVO> estrutura;
     private boolean ativo;
     
 
     
-    public ArrayList<Cliente> getHospedes() {
+    public ArrayList<ClienteVO> getHospedes() {
         return hospedes;
     }
 
-    public void setHospedes(ArrayList<Cliente> hospedes) {
+    public void setHospedes(ArrayList<ClienteVO> hospedes) {
         this.hospedes = hospedes;
     }
 
@@ -66,11 +66,11 @@ public class ReservaVO {
     }
     
 
-    public Cliente getPagante() {
+    public ClienteVO getPaganteVO() {
         return pagante;
     }
 
-    public void setPagante(Cliente pagante) {
+    public void setPaganteVO(ClienteVO pagante) {
         this.pagante = pagante;
     }
 
@@ -90,35 +90,35 @@ public class ReservaVO {
         this.checkOut = checkOut;
     }
 
-    public Funcionario getResponsavelReserva() {
+    public FuncionarioVO getResponsavelReserva() {
         return responsavelReserva;
     }
 
-    public void setResponsavelReserva(Funcionario responsavelReserva) {
+    public void setResponsavelReserva(FuncionarioVO responsavelReserva) {
         this.responsavelReserva = responsavelReserva;
     }
 
-    public Funcionario getResponsavelCheckIn() {
+    public FuncionarioVO getResponsavelCheckIn() {
         return responsavelCheckIn;
     }
 
-    public void setResponsavelCheckIn(Funcionario responsavelCheckIn) {
+    public void setResponsavelCheckIn(FuncionarioVO responsavelCheckIn) {
         this.responsavelCheckIn = responsavelCheckIn;
     }
     
-    public Funcionario getResponsavelCheckOut() {
+    public FuncionarioVO getResponsavelCheckOut() {
         return responsavelCheckOut;
     }
 
-    public void setResponsavelCheckOut(Funcionario responsavelCheckOut) {
+    public void setResponsavelCheckOut(FuncionarioVO responsavelCheckOut) {
         this.responsavelCheckOut = responsavelCheckOut;
     }
 
-    public ArrayList<Estrutura> getEstrutura() {
+    public ArrayList<EstruturaVO> getEstruturaVO() {
         return estrutura;
     }
 
-    public void setEstrutura(ArrayList<Estrutura> estrutura) {
+    public void setEstruturaVO(ArrayList<EstruturaVO> estrutura) {
         this.estrutura = estrutura;
     }
 

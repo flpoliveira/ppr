@@ -8,11 +8,14 @@ package test;
 import hotel.controler.singleton.UserFactorySingleton;
 import hotel.model.repositories.EstruturaRepository;
 import hotel.model.Cliente;
+import hotel.model.Endereco;
 import hotel.model.Estrutura;
 import hotel.model.Funcionario;
 import hotel.model.Gerente;
 import hotel.model.builders.ClienteBuilder;
+import hotel.model.builders.EnderecoBuilder;
 import hotel.model.builders.FuncionarioBuilder;
+import hotel.model.enums.Expediente;
 import hotel.model.enums.TipoEstrutura;
 import hotel.model.enums.TipoFuncionario;
 import static hotel.model.enums.TipoFuncionario.GERENTE;
@@ -54,7 +57,25 @@ public class Test {
 //        for(int i = 0; i<oi.size(); i++){
 //            System.out.println(oi.get(i).getTipo());
 //        }
-        AppUI menu = new AppUI();
-        menu.menu();
+        FuncionarioBuilder funcionarioBuilder = new FuncionarioBuilder();
+        EnderecoBuilder enderecoBuilder = new EnderecoBuilder();
+        Endereco endereco = enderecoBuilder
+                .addCep("89230-413")
+                .addCidade("Joinville")
+                .addNumero(123)
+                .addPais("Brasil")
+                .addRua("Rua Pedro de campos")
+                .build();
+        Gerente admin = (Gerente) funcionarioBuilder
+                .addCpf("admin")
+                .addEndereco(endereco)
+                .addSalario(99999999d)
+                .addSenha("admin")
+                .addRg("1.123.123-12")
+                .addTelefone("(47)3434-3434")
+                .addExpediente(Expediente.MATUTINO)
+                .addNome("admin")
+                .build(GERENTE);
+ 
     }
 }

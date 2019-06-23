@@ -13,6 +13,7 @@ import hotel.view.vo.ClienteVO;
 import hotel.view.vo.EnderecoVO;
 import java.util.ArrayList;
 import hotel.view.vo.EstruturaVO;
+import hotel.view.vo.FuncionarioVO;
 import hotel.view.vo.ReservaVO;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,93 +31,143 @@ public class AppUI
     private Scanner scanner;
     private Long clienteId_Generator = 1L;
     private Long enderecoId_Generator = 1L;
+    private FuncionarioVO logado;
     public AppUI()
     {
-        this.controller = new Controller();
+        this.controller = this.controller;
         this.scanner = new Scanner(System.in);
     }
-    
+    public boolean efetuarPagamentoReserva(ReservaVO reserva)
+    {
+        if(reserva == null)
+        {
+            System.out.println("ERRO -> reserva não recebida para pagamento.");
+            return false;
+        }
+        else
+        {
+            System.out.println("Efetuar o pagamento da reserva?");
+            System.out.println(" 1 - Sim");
+            System.out.println(" 2 - Não");
+            switch(scanner.nextInt())
+            {
+            case 1:
+                reserva.setPago(true);
+                return true;
+            default:
+                reserva.setPago(false);
+                return false;
+            }
+            
+        }
+        
+    }
+    public Object addHospedesReserva(ReservaVO reserva)
+    {
+        System.out.println("Diga o CPF do hospede desejado:");
+        String cpf = this.scanner.next();
+        ClienteVO cliente = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, cpf);
+        if(cliente == null)
+        {
+            System.out.println("Cliente não encontrado, deseja cadastra-lo?");
+            System.out.println(" 1 - Sim");
+            System.out.println(" 2 - Não");
+            switch(this.scanner.nextInt())
+            {
+                case 1:
+                    if(this.addCliente())
+                        System.out.println("Cliente cadastrado no sistema e a reserva.");
+                        while((ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, cpf) == null)
+                        {
+                            System.out.println("Parece que você cadastrou um Cliente com o CPF diferente ao digitado, favor inserir o CPF novamente ou 0 para encerrar");
+                            cpf = scanner.next();
+                            if(cpf.equals("0"))
+                                return false;
+                        }
+                        if(reserva != null)
+                        {
+                            reserva.getHospedes().add((ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, cpf));
+                            this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
+                        }
+                        else
+                            return (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, cpf);
+                        
+                       
+                            
+                        return true;
+                default:
+                    return false;
+                    
+            }
+        }
+           
+        
+        return false;
+    }
     public boolean addReserva() throws ParseException{
         ReservaVO reserva = new ReservaVO();
-        System.out.println("Digite o dia, mes e ano respectivamente do inicio da reserva.");
-        String dia, mes, ano;
-        
-        dia = scanner.next();
-        mes = scanner.next();
-        ano = scanner.next();
-        
-        String str = dia+"/"+mes+"/"+ano;
+        System.out.println("Digite a data de inicio da reserva, da seguinte forma dia/mes/ano:");
+        String entrada = scanner.next();
+        while(!entrada.matches("(0[1-9]|[12]\\d|3[01])/(0[1-9]|1[0-2])/([12]\\d{3})"))
+        {
+            System.out.println("A data foi digitada da forma incorreta, tente novamente - ou 0 para sair:");
+            entrada = scanner.next();
+            if(entrada.equals("0"))
+                return false;
+        }
+        System.out.println("Digite a data de fim da reserva, da seguinte forma dia/mes/ano:");
         SimpleDateFormat formator = new SimpleDateFormat("dd/MM/yyyy");
-        Date data_inicio = formator.parse(str);
+        Date data_inicio = formator.parse(entrada);
         reserva.setDataInicio(data_inicio);
-        System.out.println("Digite o dia, mes e ano respectivamente do fim da reserva.");
-        String diafim, mesfim, anofim;
-        
-        diafim = scanner.next();
-        mesfim = scanner.next();
-        anofim = scanner.next();
-        
-        String strfim = diafim+"/"+mesfim+"/"+anofim;
+        while(!entrada.matches("(0[1-9]|[12]\\d|3[01])/(0[1-9]|1[0-2])/([12]\\d{3})"))
+        {
+            System.out.println("A data foi digitada da forma incorreta, tente novamente - ou 0 para sair:");
+            entrada = scanner.next();
+            if(entrada.equals("0"))
+                return false;
+        }
         SimpleDateFormat formatorfim = new SimpleDateFormat("dd/MM/yyyy");
-        Date data_fim = formatorfim.parse(strfim);
-        //Date inicio fim, pago, check-in realizado ou não, checkout, ativo,
+        Date data_fim = formatorfim.parse(entrada);
+        reserva.setDataFim(data_fim);
         
-        System.out.println("A reserva já foi paga?\n 1 - Pago\n 2 - Não pago\n");
-        switch(scanner.nextInt()){
-            case 1:
-                reserva.setAtivo(true);
-            case 2:
-                reserva.setAtivo(false);
+        this.efetuarPagamentoReserva(reserva);
+        ArrayList<ClienteVO> clientes = new ArrayList<>();
+        clientes.add((ClienteVO) this.addHospedesReserva(null));
+        while(true)
+        {
+            System.out.println("Deseja cadastrar outro cliente?");
+            System.out.println(" 1 - Sim");
+            System.out.println(" 2 - Não");
+            entrada = scanner.next();
+            if(entrada.equals("1"))
+                clientes.add((ClienteVO) this.addHospedesReserva(reserva));
+            else
+                break;
         }
-        System.out.println("O check-in foi realizado? 1 - Check-in realizado\n 2 - Check-in não realizado\n");
-        switch(scanner.nextInt()){
-            case 1:
-                reserva.setCheckIn(true);
-            case 2:
-                reserva.setCheckOut(false);
-        }
+        reserva.setHospedes(clientes);
+         
+        reserva.setResponsavelReserva(logado);
+        System.out.println("Digite o CPF ou CNPJ do cliente pagante:");
+        entrada = this.scanner.next();
         
+        ClienteVO clientePagante = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, entrada);
+        while(clientePagante == null)
+        {
+            System.out.println("Cliente não encontrado, ou ainda não cadastrado, deseja cadastra-lo?");
+            System.out.println(" 1 - Sim");
+            System.out.println(" 2 - Não");
+            entrada = scanner.next();
+            if(entrada.equals("0"))
+                break;
+            this.addCliente();
+            clientePagante = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, entrada);
+            reserva.setPaganteVO(clientePagante);
+        }
         reserva.setCheckOut(false); //n faz sentido fazer uma reserva q já foi feito check out
         reserva.setAtivo(true);
-        
-        ArrayList<ClienteVO> hospedes = new ArrayList();
-        ArrayList<ClienteVO> clientes = (ArrayList<ClienteVO>) this.controller.execute(OperationEnum.GETALLCLIENTE, null);
-        
-        
-        while(true){
-            int cadas;
-            System.out.println("Deseja cadastrar um hospede? 1 - 1 para sim\n 2 - para não\n");
-            cadas = scanner.nextInt();
-            if(cadas != 1){
-                break;
-            } else {
-                System.out.println("Digite o CPF do hospede a ser adicionado a lista de hospedes.");
-                String cpf_user = scanner.nextLine();
-                for(ClienteVO x : clientes){
-                    if(x.getCPF() == cpf_user){
-                        hospedes.add(x);
-                    }
-                }
-            }
-        }
-        
-        System.out.println("Digite o cpf do pagante");
-        String cpf_user = scanner.nextLine();
-            for(ClienteVO x : clientes){
-                if(x.getCPF() == cpf_user){
-                    reserva.setPagante(x);
-                    break;
-                }
-            }
+        this.controller.execute(OperationEnum.ADDRESERVA, reserva);
+       
             //falta os funcionários responsáveise a lista de estrutura
-        
-        
-        
-        
-            
-        
-        
-        
 
         return false;
     }
@@ -246,8 +297,8 @@ public class AppUI
             System.out.println("---------HOTELARIA--------");
             System.out.println("1 - Adicionar cliente     ");
             System.out.println("2 - Consultar cliente     ");
-            System.out.println("3 - Adicionar estrutura   ");
-            System.out.println("4 - Adicionar reserva     ");
+            //System.out.println("3 - Adicionar estrutura   ");
+            System.out.println("3 - Adicionar reserva     ");
             System.out.println("0 - Encerrar              ");
             System.out.println("--------------------------");
             switch(this.scanner.nextInt())
@@ -256,20 +307,28 @@ public class AppUI
                     if(this.addCliente())
                         System.out.println("Cliente cadastrado com sucesso.");
                     else
-                        System.out.println("Um erro ocorreu no cadastro de cliente.");
+                        System.err.println("Ocorreu um erro no cadastro de cliente.");
                     break;
                 case 2:
                     this.consultaClientes();
                     break;
       
                 case 3:
-                    if(this.addEstrutura()){
-                        System.out.println("Estrutura cadastrada com sucesso.");
-                    } else {
-                        System.out.println("Um erro ocorreu no cadastro de estrutura.");
+                    try{
+                        if(this.addReserva())
+                            System.out.println("Reserva cadastrada com sucesso!");
+                        else
+                            System.out.println("ERRO -> Ocorreu um erro no cadastro da reserva.");
+                        
                     }
-                
+                    catch(ParseException e)
+                    {
+                        System.out.println("ERRO -> Um erro na formatação da Data ocorreu.");
+                    }
+                    break;
+                        
                 case 4:
+                    break;
                     //if(this.addReserva()){
                     //    System.out.println("alvaslvvava");
                     //} else {

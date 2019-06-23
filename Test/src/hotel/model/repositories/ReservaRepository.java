@@ -30,6 +30,28 @@ public class ReservaRepository {
                 }
             }
         }
+        public void updateReserva(Reserva reserva)
+        {
+            for(Reserva x : Reservas)
+            {
+                if(x.getId() == reserva.getId())
+                {
+                    x.setCheckIn(reserva.isCheckIn());
+                    x.setCheckOut(reserva.isCheckOut());
+                    x.setEstrutura(reserva.getEstrutura());
+                    x.setPagante(reserva.getPagante());
+                    x.setHospedes(reserva.getHospedes());
+                    x.setResponsavelCheckIn(reserva.getResponsavelCheckIn());
+                    x.setResponsavelCheckOut(reserva.getResponsavelCheckOut());
+                    x.setResponsavelReserva(reserva.getResponsavelReserva());
+                    x.setAtivo(reserva.isAtivo());
+                    x.setPago(reserva.getPago());
+                    x.setDataInicio(reserva.getDataInicio());
+                    x.setDataFim(reserva.getDataFim());
+                    return;
+                }
+            }
+        }
 	public void addReserva(Reserva x) { // ver no diagrama
 		this.Reservas.add(x);
         }

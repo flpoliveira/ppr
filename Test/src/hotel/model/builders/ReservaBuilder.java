@@ -138,4 +138,6 @@ public class ReservaBuilder {
     protected ArrayList<Estrutura>  estruturas;
     protected boolean ativo;
      */
+
+   
 }
