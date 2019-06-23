@@ -32,10 +32,15 @@ public class AppUI
     private Long clienteId_Generator = 1L;
     private Long enderecoId_Generator = 1L;
     private FuncionarioVO logado;
+    private boolean logadoEhGerente;
     public AppUI()
     {
-        this.controller = this.controller;
+        this.logadoEhGerente = false;
+        this.controller = new Controller();
         this.scanner = new Scanner(System.in);
+        this.logadoEhGerente = false;
+        this.logado = null;
+        
     }
     public boolean efetuarPagamentoReserva(ReservaVO reserva)
     {
@@ -289,9 +294,42 @@ public class AppUI
   
         return false;
     }
-    
+    public boolean login()
+    {
+        System.out.println("Digite o CPF do Funcionario:");
+        String cpf = this.scanner.next();
+        System.out.println("Digite sua senha:");
+        String senha = this.scanner.next();
+        FuncionarioVO funcionario = new FuncionarioVO();
+        funcionario.setCpf(cpf);
+        funcionario.setSenha(senha);
+        FuncionarioVO l = (FuncionarioVO) this.controller.execute(OperationEnum.LOGINFUNCIONARIO, funcionario);
+        while(l == null)
+        {
+            System.out.println("Senha ou CPF incorreto, tente novamente ou 0 para sair");
+            cpf = this.scanner.next();
+            if(cpf.equals("0"))
+                return false;
+            senha = this.scanner.next();
+            if(senha.equals("0"))
+               return false;
+            funcionario.setCpf(cpf);
+            funcionario.setSenha(senha);
+            l = (FuncionarioVO) this.controller.execute(OperationEnum.LOGINFUNCIONARIO, funcionario);
+        }
+        this.logado = l;
+        if((boolean) this.controller.execute(OperationEnum.EHGERENTE, this.logado.getId()));
+            this.logadoEhGerente = true;
+        return true;
+       
+    }
     public boolean menu()
     {
+      
+        if(!this.login())
+            return false;
+     
+            
         while(true)
         {
             System.out.println("---------HOTELARIA--------");

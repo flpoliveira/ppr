@@ -5,8 +5,13 @@
  */
 package hotel.model.repositories;
 
+import hotel.model.Endereco;
 import hotel.model.Funcionario;
 import hotel.model.Gerente;
+import hotel.model.builders.EnderecoBuilder;
+import hotel.model.builders.FuncionarioBuilder;
+import hotel.model.enums.Expediente;
+import static hotel.model.enums.TipoFuncionario.GERENTE;
 import java.util.ArrayList;
 
 /**
@@ -18,6 +23,30 @@ public class GerenteRepository {
     public GerenteRepository() 
     {
         this.gerentes = new ArrayList<>();
+        FuncionarioBuilder funcionarioBuilder = new FuncionarioBuilder();
+        EnderecoBuilder enderecoBuilder = new EnderecoBuilder();
+        Endereco endereco = enderecoBuilder
+                .addCep("89230-413")
+                .addCidade("Joinville")
+                .addNumero(123)
+                .addPais("Brasil")
+                .addRua("Rua Pedro de campos")
+                .build();
+        Gerente admin = (Gerente) funcionarioBuilder
+                .addCpf("admin")
+                .addEndereco(endereco)
+                .addSalario(99999999d)
+                .addSenha("admin")
+                .addRg("1.123.123-12")
+                .addTelefone("(47)3434-3434")
+                .addExpediente(Expediente.MATUTINO)
+                .addNome("admin")
+                .build(GERENTE);
+       this.gerentes.add(admin);
+    }
+    public void addGerente(Funcionario x)
+    {
+        gerentes.add((Gerente) x);
     }
     public boolean ehGerente(Long Id)
     {
@@ -28,4 +57,17 @@ public class GerenteRepository {
         }
         return false;
     }
+    
+     public Funcionario login(String cpf, String senha)
+     {
+            for(Funcionario x : gerentes)
+            {
+                if(x.getCpf().equals(cpf))
+                {
+                    if(x.getSenha().equals(senha))
+                        return x;
+                }
+            }
+            return null;
+     }
 }

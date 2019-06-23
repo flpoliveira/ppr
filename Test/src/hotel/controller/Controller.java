@@ -9,6 +9,7 @@ import hotel.model.Cliente;
 import hotel.model.Endereco;
 import hotel.model.Estrutura;
 import hotel.model.Funcionario;
+import hotel.model.Gerente;
 import hotel.model.Reserva;
 import hotel.model.builders.ClienteBuilder;
 import hotel.model.builders.EnderecoBuilder;
@@ -47,7 +48,8 @@ public class Controller
     private Endereco mapEndereco(EnderecoVO enderecoVO)
     {
         EnderecoBuilder enderecoBuilder = new EnderecoBuilder();
-        Endereco endereco = enderecoBuilder.addCep(enderecoVO.getCep())
+        Endereco endereco = enderecoBuilder
+                .addCep(enderecoVO.getCep())
                 .addId(enderecoVO.getId())
                 .addCidade(enderecoVO.getCidade())
                 .addNumero(enderecoVO.getNumero())
@@ -56,6 +58,7 @@ public class Controller
                 .build();
         return endereco;
     }
+    
     private Cliente map(ClienteVO clienteVO)
     {
         
@@ -81,6 +84,20 @@ public class Controller
         enderecoVO.setPais(endereco.getPais());
         enderecoVO.setCidade(endereco.getCidade());
         return enderecoVO;
+    }
+    private FuncionarioVO inversedMapFuncionario(Funcionario funcionario)
+    {
+        FuncionarioVO funcionarioVO = new FuncionarioVO();
+        funcionarioVO.setCpf(funcionario.getCpf());
+        funcionarioVO.setEnderecoVO(this.inversedMapEndereco(funcionario.getEndereco()));
+        funcionarioVO.setExpediente(funcionario.getExpediente());
+        funcionarioVO.setId(funcionario.getId());
+        funcionarioVO.setNome(funcionario.getNome());
+        funcionarioVO.setRg(funcionario.getRg());
+        funcionarioVO.setSalario(funcionario.getSalario());
+        funcionarioVO.setSenha(funcionario.getSenha());
+        funcionarioVO.setTelefone(funcionario.getTelefone());
+        return funcionarioVO;
     }
     private ClienteVO inversedMap(Cliente cliente)
     {
@@ -114,6 +131,7 @@ public class Controller
     private Funcionario mapFuncionario(FuncionarioVO funcionarioVO)
     {
         FuncionarioBuilder funcionarioBuilder = new FuncionarioBuilder();
+        System.out.println("AIDS");
         Funcionario funcionario = funcionarioBuilder
                 .addCpf(funcionarioVO.getCpf())
                 .addEndereco(this.mapEndereco(funcionarioVO.getEnderecoVO()))
@@ -157,7 +175,8 @@ public class Controller
         return reserva;
         
     }
-    public ArrayList<ClienteVO> mapClientes(ArrayList<Cliente> clientes)
+   
+    private ArrayList<ClienteVO> mapClientes(ArrayList<Cliente> clientes)
     {
         ArrayList<ClienteVO> lista = new ArrayList<>();
         for(Cliente x : clientes)
@@ -187,6 +206,19 @@ public class Controller
             case ADDRESERVA:
                 reservarepo.addReserva(this.mapReserva((ReservaVO) data));
                 return true;
+            case LOGINFUNCIONARIO:
+                Funcionario func = this.funcionariorepo.login(((FuncionarioVO) data).getCpf(),((FuncionarioVO) data).getSenha());
+                if(func == null)
+                {
+                    func = (Funcionario) this.gerenterepo.login(((FuncionarioVO) data).getCpf(),((FuncionarioVO) data).getSenha());
+                   
+                }
+                if(func != null)
+                    return this.inversedMapFuncionario(func);
+                else
+                    return null;
+            case EHGERENTE:
+                return this.gerenterepo.ehGerente((Long) data);
                 
                 
         }

@@ -57,25 +57,9 @@ public class Test {
 //        for(int i = 0; i<oi.size(); i++){
 //            System.out.println(oi.get(i).getTipo());
 //        }
-        FuncionarioBuilder funcionarioBuilder = new FuncionarioBuilder();
-        EnderecoBuilder enderecoBuilder = new EnderecoBuilder();
-        Endereco endereco = enderecoBuilder
-                .addCep("89230-413")
-                .addCidade("Joinville")
-                .addNumero(123)
-                .addPais("Brasil")
-                .addRua("Rua Pedro de campos")
-                .build();
-        Gerente admin = (Gerente) funcionarioBuilder
-                .addCpf("admin")
-                .addEndereco(endereco)
-                .addSalario(99999999d)
-                .addSenha("admin")
-                .addRg("1.123.123-12")
-                .addTelefone("(47)3434-3434")
-                .addExpediente(Expediente.MATUTINO)
-                .addNome("admin")
-                .build(GERENTE);
+        AppUI x = new AppUI();
+        x.menu();
+       
  
     }
 }

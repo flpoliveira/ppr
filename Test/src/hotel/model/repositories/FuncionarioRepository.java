@@ -37,5 +37,17 @@ public class FuncionarioRepository {
 		}
 		return null;
 	}
+        public Funcionario login(String cpf, String senha)
+        {
+            for(Funcionario x : Funcionarios)
+            {
+                if(x.getCpf().equals(cpf))
+                {
+                    if(x.getSenha().equals(senha))
+                        return x;
+                }
+            }
+            return null;
+        }
         
 }
