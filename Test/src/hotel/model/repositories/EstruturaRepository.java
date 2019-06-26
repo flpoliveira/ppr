@@ -36,13 +36,12 @@ public class EstruturaRepository {
 		}
 		return aux;
 	}
-        public Estrutura getEstruturaPId(int id){
-		for(int i = 0; i < this.Estruturas.size(); i++) {
-                    Estrutura aux = this.Estruturas.get(i);
-                    if(aux.getId().equals(id)){
-                        return aux;
-                    }
-		}
+        public Estrutura getEstruturaPId(Long id){
+		for(Estrutura x : Estruturas)
+                {
+                    if(x.getId() == id)
+                        return x;
+                }
                 return null;
 	}
 }

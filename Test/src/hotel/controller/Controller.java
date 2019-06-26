@@ -45,34 +45,17 @@ public class Controller
         this.reservarepo = new ReservaRepository();
         this.gerenterepo = new GerenteRepository();
     }
-    private Endereco mapEndereco(EnderecoVO enderecoVO)
+    private EstruturaVO inversedMapEstrutura(Estrutura estrutura)
     {
-        EnderecoBuilder enderecoBuilder = new EnderecoBuilder();
-        Endereco endereco = enderecoBuilder
-                .addCep(enderecoVO.getCep())
-                .addId(enderecoVO.getId())
-                .addCidade(enderecoVO.getCidade())
-                .addNumero(enderecoVO.getNumero())
-                .addPais(enderecoVO.getPais())
-                .addRua(enderecoVO.getRua())
-                .build();
-        return endereco;
-    }
-    
-    private Cliente map(ClienteVO clienteVO)
-    {
-        
-        ClienteBuilder clienteBuilder = new ClienteBuilder();
-        Cliente cliente = clienteBuilder.addNome(clienteVO.getNome())
-                .addId(clienteVO.getId())
-                .addCNPJ(clienteVO.getCNPJ())
-                .addCPF(clienteVO.getCPF())
-                .addEndereco(this.mapEndereco(clienteVO.getEndereco()))
-                .addTelefone(clienteVO.getTelefone())
-                .build(clienteVO.isEhJuridico());
-        return cliente;
-                
-  
+        EstruturaVO estruturaVO = new EstruturaVO();
+        estruturaVO.setAndar(estrutura.getAndar());
+        estruturaVO.setAtivo(estrutura.isAtivo());
+        estruturaVO.setDescricao(estrutura.getDescricao());
+        estruturaVO.setId(estrutura.getId());
+        estruturaVO.setNumero(estrutura.getNumero());
+        estruturaVO.setQtdPessoas(estrutura.getQtdPessoas());
+        estruturaVO.setTipo(estrutura.getTipo());
+        return estruturaVO;
     }
     private EnderecoVO inversedMapEndereco(Endereco endereco)
     {
@@ -113,6 +96,35 @@ public class Controller
         return clienteVO;
         
     }
+     private Endereco mapEndereco(EnderecoVO enderecoVO)
+    {
+        EnderecoBuilder enderecoBuilder = new EnderecoBuilder();
+        Endereco endereco = enderecoBuilder
+                .addCep(enderecoVO.getCep())
+                .addId(enderecoVO.getId())
+                .addCidade(enderecoVO.getCidade())
+                .addNumero(enderecoVO.getNumero())
+                .addPais(enderecoVO.getPais())
+                .addRua(enderecoVO.getRua())
+                .build();
+        return endereco;
+    }
+    
+    private Cliente map(ClienteVO clienteVO)
+    {
+        
+        ClienteBuilder clienteBuilder = new ClienteBuilder();
+        Cliente cliente = clienteBuilder.addNome(clienteVO.getNome())
+                .addId(clienteVO.getId())
+                .addCNPJ(clienteVO.getCNPJ())
+                .addCPF(clienteVO.getCPF())
+                .addEndereco(this.mapEndereco(clienteVO.getEndereco()))
+                .addTelefone(clienteVO.getTelefone())
+                .build(clienteVO.isEhJuridico());
+        return cliente;
+                
+  
+    }
     private Estrutura mapEstrutura(EstruturaVO estruturaVO)
     {
         EstruturaBuilder estruturaBuilder = new EstruturaBuilder();
@@ -128,11 +140,14 @@ public class Controller
        return estrutura;
         
     }
-    private Funcionario mapFuncionario(FuncionarioVO funcionarioVO)
+    private Funcionario mapFuncionario(FuncionarioVO funcionarioVO, TipoFuncionario x)
     {
         FuncionarioBuilder funcionarioBuilder = new FuncionarioBuilder();
-        System.out.println("AIDS");
-        Funcionario funcionario = funcionarioBuilder
+        if(x == null)
+        {
+            Funcionario funcionario = funcionarioBuilder
+                .addId(funcionarioVO.getId())
+                .addTelefone(funcionarioVO.getTelefone())
                 .addCpf(funcionarioVO.getCpf())
                 .addEndereco(this.mapEndereco(funcionarioVO.getEnderecoVO()))
                 .addExpediente(funcionarioVO.getExpediente())
@@ -141,7 +156,24 @@ public class Controller
                 .addSalario(funcionarioVO.getSalario())
                 .addSenha(funcionarioVO.getSenha())
                 .build(gerenterepo.ehGerente(funcionarioVO.getId())? TipoFuncionario.GERENTE : TipoFuncionario.FUNCIONARIO);
-        return funcionario;
+                return funcionario;
+        }
+        else
+        {
+                Funcionario funcionario = funcionarioBuilder
+                .addId(funcionarioVO.getId())
+                .addTelefone(funcionarioVO.getTelefone())
+                .addCpf(funcionarioVO.getCpf())
+                .addEndereco(this.mapEndereco(funcionarioVO.getEnderecoVO()))
+                .addExpediente(funcionarioVO.getExpediente())
+                .addNome(funcionarioVO.getNome())
+                .addRg(funcionarioVO.getRg())
+                .addSalario(funcionarioVO.getSalario())
+                .addSenha(funcionarioVO.getSenha())
+                .build(x);
+                return funcionario;
+        }
+        
                 
     }
     private Reserva mapReserva(ReservaVO reservaVO)
@@ -168,9 +200,9 @@ public class Controller
                 .addHospedes(hospedes)
                 .addPagante(this.map(reservaVO.getPaganteVO()))
                 .addPago(reservaVO.getPago())
-                .addResponsavelCheckin(this.mapFuncionario(reservaVO.getResponsavelCheckIn()))
-                .addResponsavelReserva(this.mapFuncionario(reservaVO.getResponsavelReserva()))
-                .addResposavelCheckOut(this.mapFuncionario(reservaVO.getResponsavelCheckOut()))
+                .addResponsavelCheckin(this.mapFuncionario(reservaVO.getResponsavelCheckIn(), null))
+                .addResponsavelReserva(this.mapFuncionario(reservaVO.getResponsavelReserva(), null))
+                .addResposavelCheckOut(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), null))
                 .build();
         return reserva;
         
@@ -185,6 +217,24 @@ public class Controller
         }
         return lista;
     }
+    private ArrayList<EstruturaVO> mapEstruturas(ArrayList<Estrutura> estruturas)
+    {
+        ArrayList<EstruturaVO> estruturasVO = new ArrayList<>();
+        for (Estrutura x : estruturas)
+        {
+            estruturasVO.add(this.inversedMapEstrutura(x));
+        }
+        return estruturasVO;
+    }
+    private ArrayList<FuncionarioVO> mapFuncionarios(ArrayList<Funcionario> funcionarios)
+    {
+        ArrayList<FuncionarioVO> funcionariosVO = new ArrayList<>();
+        for(Funcionario x : funcionarios)
+        {
+            funcionariosVO.add(this.inversedMapFuncionario(x));
+        }
+        return funcionariosVO;
+    }
     public Object execute(OperationEnum en, Object data)
     {
         switch(en)
@@ -192,6 +242,18 @@ public class Controller
             case ADDCLIENT:
                 Cliente cliente = this.map((ClienteVO) data);
                 clienterepo.addCliente(cliente);
+                return true;
+            case ADDESTRUTURA:
+                Estrutura estrutura = this.mapEstrutura((EstruturaVO) data);
+                estruturarepo.addEstrutura(estrutura);
+                return true;
+            case ADDFUNCIONARIO:
+                Funcionario func = this.mapFuncionario((FuncionarioVO) data, TipoFuncionario.FUNCIONARIO);
+                funcionariorepo.addFuncionario(func);
+                return true;
+            case ADDGERENTE:
+                Funcionario gerente = this.mapFuncionario((FuncionarioVO) data, TipoFuncionario.GERENTE);
+                gerenterepo.addGerente(gerente);
                 return true;
             case GETALLCLIENTE:
                 return this.mapClientes(clienterepo.getClientes());
@@ -207,18 +269,41 @@ public class Controller
                 reservarepo.addReserva(this.mapReserva((ReservaVO) data));
                 return true;
             case LOGINFUNCIONARIO:
-                Funcionario func = this.funcionariorepo.login(((FuncionarioVO) data).getCpf(),((FuncionarioVO) data).getSenha());
-                if(func == null)
+                Funcionario fc = this.funcionariorepo.login(((FuncionarioVO) data).getCpf(),((FuncionarioVO) data).getSenha());
+                if(fc == null)
                 {
-                    func = (Funcionario) this.gerenterepo.login(((FuncionarioVO) data).getCpf(),((FuncionarioVO) data).getSenha());
+                    fc = (Funcionario) this.gerenterepo.login(((FuncionarioVO) data).getCpf(),((FuncionarioVO) data).getSenha());
                    
                 }
-                if(func != null)
-                    return this.inversedMapFuncionario(func);
+                if(fc != null)
+                    return this.inversedMapFuncionario(fc);
                 else
                     return null;
             case EHGERENTE:
                 return this.gerenterepo.ehGerente((Long) data);
+            case GETALLESTRUTURA:
+                return this.mapEstruturas(estruturarepo.getEstruturas());
+            case GETESTRUTURAPERID:
+                Long id = Long.valueOf((int)data);
+                return this.inversedMapEstrutura(estruturarepo.getEstruturaPId(id));
+                
+            case GETALLFUNCIONARIO:
+                return this.mapFuncionarios(funcionariorepo.getFuncionarios());
+            case GETALLGERENTE:
+                ArrayList<Funcionario> aux = new ArrayList<>();
+                for(Gerente x : gerenterepo.getGerentes())
+                {
+                    aux.add((Funcionario) x);
+                }
+                return this.mapFuncionarios(aux);
+            case GETFUNCIONARIOORGERENTEPERID:
+                Funcionario f = funcionariorepo.getFuncionarioPorId(Long.valueOf((int)data));
+                if(f == null)
+                    f = gerenterepo.getGerentePorId(Long.valueOf((int)data));
+                if(f != null)
+                    return this.inversedMapFuncionario(f);
+                else
+                    return null;
                 
                 
         }

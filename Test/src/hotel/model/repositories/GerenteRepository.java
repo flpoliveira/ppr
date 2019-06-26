@@ -33,6 +33,7 @@ public class GerenteRepository {
                 .addRua("Rua Pedro de campos")
                 .build();
         Gerente admin = (Gerente) funcionarioBuilder
+                .addId(Long.MAX_VALUE)
                 .addCpf("admin")
                 .addEndereco(endereco)
                 .addSalario(99999999d)
@@ -46,11 +47,11 @@ public class GerenteRepository {
     }
     public void addGerente(Funcionario x)
     {
-        gerentes.add((Gerente) x);
+        getGerentes().add((Gerente) x);
     }
     public boolean ehGerente(Long Id)
     {
-        for(Gerente x : gerentes)
+        for(Gerente x : getGerentes())
         {
             if(x.getId() == Id)
                 return true;
@@ -60,7 +61,7 @@ public class GerenteRepository {
     
      public Funcionario login(String cpf, String senha)
      {
-            for(Funcionario x : gerentes)
+            for(Funcionario x : getGerentes())
             {
                 if(x.getCpf().equals(cpf))
                 {
@@ -70,4 +71,27 @@ public class GerenteRepository {
             }
             return null;
      }
+
+    /**
+     * @return the gerentes
+     */
+    public ArrayList<Gerente> getGerentes() {
+        return gerentes;
+    }
+
+    /**
+     * @param gerentes the gerentes to set
+     */
+    public void setGerentes(ArrayList<Gerente> gerentes) {
+        this.gerentes = gerentes;
+    }
+    public Funcionario getGerentePorId(Long id)
+    {
+            for(Gerente x : gerentes)
+            {
+                if(x.getId() == id)
+                    return x;
+            }
+            return null;
+    }
 }

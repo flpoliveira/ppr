@@ -153,7 +153,30 @@ public class FuncionarioVO {
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
-    
+      @Override
+    public String toString()
+    {
+        String x = "ID #"+this.getId()+"\nNome: "+this.getNome();
+        x = x+"\nCPF: "+this.getCpf();
+        x = x+"\nRG: "+this.getRg();
+        switch(this.getExpediente())
+        {
+            case MATUTINO:
+                x = x + "\nExpediente: Matutino";
+                break;
+            case NOTURNO:
+                x = x + "\nExpediente: Noturno";
+                break;
+            default:
+                x = x + "\nExpediente: Vespertino";
+                break;
+        }
+        x = x+"\nTelefone: "+this.getTelefone();
+        x = x+"\n"+endereco.toString();
+        return x;
+               
+             
+    }
    
 //    public void consultaCliente(int id, ClienteRepository repCli){
 //        Cliente a = repCli.getClientePorId(id);

@@ -198,12 +198,7 @@ public class Funcionario {
 //       // talvez precise mudar aqui ***colocar mais info
 //    }
      
-    public void ConsultaEstrutura(int id, EstruturaRepository repEst){
-        Estrutura x = repEst.getEstruturaPId(id);
-        if(x != null){
-            System.out.println("Ativo: "+x.isAtivo()+"Andar: "+x.getAndar()+"numero: "+x.getNumero()+"Suporta: "+x.getQtdPessoas()+" Pessoas"+" Tipo: "+x.getTipo());
-        }else System.out.println("Id inexistente ou incorreta");
-    }
+   
     public void cdsReverva(Date dini, Date dfim, Cliente cli, ClienteRepository repCli, ReservaRepository repRes){
         // alguem implementa esse metodo aqui, nao entendi oque é pra fazer com a variavel Boolean Pago em reservas..
     }

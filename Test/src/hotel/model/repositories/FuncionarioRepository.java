@@ -49,5 +49,13 @@ public class FuncionarioRepository {
             }
             return null;
         }
-        
+        public Funcionario getFuncionarioPorId(Long id)
+        {
+            for(Funcionario x : Funcionarios)
+            {
+                if(x.getId() == id)
+                    return x;
+            }
+            return null;
+        }
 }
