@@ -45,72 +45,25 @@ public class AppUI
         this.logado = null;
         
     }
-    public boolean efetuarPagamentoReserva(ReservaVO reserva)
+ 
+    public ClienteVO addHospedeReserva()
     {
-        if(reserva == null)
+        ClienteVO cliente = new ClienteVO();
+        System.out.println("Digite o CPF do cliente:");
+        String entrada = scanner.next();
+        cliente = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, entrada);
+        while( cliente ==  null)
         {
-            System.out.println("ERRO -> reserva não recebida para pagamento.");
-            return false;
-        }
-        else
-        {
-            System.out.println("Efetuar o pagamento da reserva?");
-            System.out.println(" 1 - Sim");
-            System.out.println(" 2 - Não");
-            switch(scanner.nextInt())
-            {
-            case 1:
-                reserva.setPago(true);
-                return true;
-            default:
-                reserva.setPago(false);
-                return false;
-            }
             
+            System.out.println("O cliente não foi encontrado ou o cpf foi digitado errado. Voce deseja cadastrar ele?");
+            System.out.println("1-Sim");
+            System.out.println("2-Nao");
+            if(this.scanner.nextInt() == 2)
+                return null;
+            this.addCliente();
+            cliente = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, entrada);
         }
-        
-    }
-    public Object addHospedesReserva(ReservaVO reserva)
-    {
-        System.out.println("Diga o CPF do hospede desejado:");
-        String cpf = this.scanner.next();
-        ClienteVO cliente = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, cpf);
-        if(cliente == null)
-        {
-            System.out.println("Cliente não encontrado, deseja cadastra-lo?");
-            System.out.println(" 1 - Sim");
-            System.out.println(" 2 - Não");
-            switch(this.scanner.nextInt())
-            {
-                case 1:
-                    if(this.addCliente())
-                        System.out.println("Cliente cadastrado no sistema e a reserva.");
-                        while((ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, cpf) == null)
-                        {
-                            System.out.println("Parece que você cadastrou um Cliente com o CPF diferente ao digitado, favor inserir o CPF novamente ou 0 para encerrar");
-                            cpf = scanner.next();
-                            if(cpf.equals("0"))
-                                return false;
-                        }
-                        if(reserva != null)
-                        {
-                            reserva.getHospedes().add((ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, cpf));
-                            this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
-                        }
-                        else
-                            return (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, cpf);
-                        
-                       
-                            
-                        return true;
-                default:
-                    return false;
-                    
-            }
-        }
-           
-        
-        return false;
+        return cliente;
     }
     public boolean addReserva() throws ParseException{
         ReservaVO reserva = new ReservaVO();
@@ -127,6 +80,7 @@ public class AppUI
         SimpleDateFormat formator = new SimpleDateFormat("dd/MM/yyyy");
         Date data_inicio = formator.parse(entrada);
         reserva.setDataInicio(data_inicio);
+        entrada = scanner.next();
         while(!entrada.matches("(0[1-9]|[12]\\d|3[01])/(0[1-9]|1[0-2])/([12]\\d{3})"))
         {
             System.out.println("A data foi digitada da forma incorreta, tente novamente, ou 0 para sair:");
@@ -138,18 +92,19 @@ public class AppUI
         Date data_fim = formatorfim.parse(entrada);
         reserva.setDataFim(data_fim);
         
-        this.efetuarPagamentoReserva(reserva);
         ArrayList<ClienteVO> clientes = new ArrayList<>();
-        clientes.add((ClienteVO) this.addHospedesReserva(null));
+       
         while(true)
         {
+            System.out.println("Dados do hospede:");
+            ClienteVO aux = this.addHospedeReserva();
+            if(aux != null)
+                clientes.add(aux);
             System.out.println("Deseja cadastrar outro hospede?");
             System.out.println(" 1 - Sim");
             System.out.println(" 2 - Não");
             entrada = scanner.next();
-            if(entrada.equals("1"))
-                clientes.add((ClienteVO) this.addHospedesReserva(reserva));
-            else
+            if(entrada.equals("2"))
                 break;
         }
         reserva.setHospedes(clientes);
@@ -159,6 +114,7 @@ public class AppUI
         entrada = this.scanner.next();
         
         ClienteVO clientePagante = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, entrada);
+        reserva.setPago(false);
         while(clientePagante == null)
         {
             System.out.println("Cliente não encontrado, ou ainda não cadastrado, deseja cadastra-lo?");
@@ -170,17 +126,105 @@ public class AppUI
             this.addCliente();
             clientePagante = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, entrada);
             reserva.setPaganteVO(clientePagante);
+            reserva.setPago(true);
         }
+        System.out.println("Selecione as estruturas para a reserva:");
+        ArrayList<EstruturaVO> estruturasReserva = new ArrayList<>();
+        ArrayList<EstruturaVO> estruturas = (ArrayList<EstruturaVO>) this.controller.execute(OperationEnum.GETALLESTRUTURA, null);
+        if(estruturas.size() == 0)
+        {
+            System.out.println("Não há estruturas cadastradas");
+        }
+        else
+        {
+            System.out.println("---------Lista de Estruturas--------");
+            for(EstruturaVO x :estruturas)
+            {
+                System.out.println(x.getId()+"- "+x.getDescricao());
+            }
+            System.out.println("------------------------------------");
+        }
+        
+        
+        
+        while(true)
+        {
+            System.out.println("digite o Id da estrutura, ou 0 para voltar:");
+            int entradaS = this.scanner.nextInt();
+            if(entradaS == 0)
+                break;
+            EstruturaVO estrutura = (EstruturaVO) this.controller.execute(OperationEnum.GETESTRUTURAPERID, entradaS);
+            if(estrutura == null)
+            {
+                System.out.println("Estrutura não encontrada.");
+                System.out.println("Cancelando a reserva!");
+                return false;
+            }
+            else
+            {
+                estruturasReserva.add(estrutura);
+                System.out.println("Estrutura #"+ entradaS + " cadastrada a reserva.");
+            }
+           
+        }
+        reserva.setEstruturaVO(estruturasReserva);
         reserva.setCheckIn(false);
         reserva.setCheckOut(false); //n faz sentido fazer uma reserva q já foi feito check out
         reserva.setAtivo(true);
-        this.controller.execute(OperationEnum.ADDRESERVA, reserva);
+        System.out.println("dshaudhaushduahduashduashd"+this.logado.getId());
+        if((boolean) this.controller.execute(OperationEnum.DISPONIBILIDADERESERVA, reserva))
+        {
+            this.controller.execute(OperationEnum.ADDRESERVA, reserva);
+            System.out.println("Reserva cadastrada!");
+            
+        }
+        else
+            System.out.println("Quartos indisponiveis para este agendamento, favor utilizar outras estruturas.");
+        
+        
+            
+        
+        
        
             //falta os funcionários responsáveise a lista de estrutura
 
         return false;
     }
     
+    public boolean consultaReservas()
+    {
+        ArrayList<ReservaVO> reservas = (ArrayList<ReservaVO>) this.controller.execute(OperationEnum.GETALLRESERVA, null);
+        for(ReservaVO x : reservas)
+        {
+            System.out.println("Reserva ID#"+x.getId());
+        }
+        System.out.println("Digite o ID da reserva, ou 0 para sair");
+        ReservaVO reserva = null;
+        String entrada;
+        while(reserva == null)
+        {
+            entrada = scanner.next();
+            if(entrada.equals("0"))
+                return false;
+            else
+            {
+                reserva = (ReservaVO) this.controller.execute(OperationEnum.GETRESERVAPERID, entrada);
+                 System.out.println("Para cancelar essa reserva tecle 1, para voltar, tecle 2");
+                if(entrada.equals("1"))
+                {
+                    reserva.setAtivo(false);
+                    this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
+                }
+                else
+                    return false;
+            }
+           
+        }
+        
+        return false;
+        
+    }
+   
     public boolean addEstrutura(){
         EstruturaVO estrutura = new EstruturaVO();
         estrutura.setId(estruturaId_Generator);
@@ -504,24 +548,25 @@ public class AppUI
                 System.out.println("1 - Adicionar cliente     ");
                 System.out.println("2 - Consultar cliente     ");
                 System.out.println("3 - Adicionar reserva     ");
-                System.out.println("4 - Consultar estrutura   ");
+                System.out.println("4 - Consultar reserva     ");
+                System.out.println("5 - Consultar estrutura   ");
                 if(this.logadoEhGerente)
-                    System.out.println("5 - Adicionar estrutura   ");
+                    System.out.println("6 - Adicionar estrutura   ");
                 if(this.logadoEhGerente)
-                    System.out.println("6 - Adicionar Funcionario ");
+                    System.out.println("7 - Adicionar Funcionario ");
                 if(this.logadoEhGerente)
-                    System.out.println("7 - Consultar Funcionario");
+                    System.out.println("8 - Consultar Funcionario");
                 System.out.println("0 - Desconectar-se            ");
                 System.out.println("--------------------------");
 
                 entrada = this.scanner.nextInt();
                 if(entrada == 0)
                         break;
-                if(entrada == 5)
+                if(entrada == 6)
                     this.addEstrutura();
-                else if(entrada == 6)
-                    this.addFuncionario();
                 else if(entrada == 7)
+                    this.addFuncionario();
+                else if(entrada == 8)
                     this.consultaFuncionarios();
                 switch(entrada)
                 {
@@ -545,8 +590,12 @@ public class AppUI
                         }
                         break;
                     case 4:
+                        this.consultaReservas();
+                        break;
+                    case 5:
                           this.consultaEstruturas();
                           break;
+                    
                         //if(this.addReserva()){
                         //    System.out.println("alvaslvvava");
                         //} else {

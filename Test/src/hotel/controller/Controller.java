@@ -96,6 +96,28 @@ public class Controller
         return clienteVO;
         
     }
+    private ReservaVO inversedMapReserva(Reserva reserva)
+    {
+        ReservaVO reservaVO = new ReservaVO();
+        reservaVO.setAtivo(reserva.isAtivo());
+        reservaVO.setCheckIn(reserva.isCheckIn());
+        reservaVO.setCheckOut(reserva.isCheckOut());
+        reservaVO.setDataFim(reserva.getDataFim());
+        reservaVO.setDataInicio(reserva.getDataInicio());
+        reservaVO.setEstruturaVO(this.mapEstruturas(reserva.getEstrutura()));
+        reservaVO.setHospedes(this.mapClientes(reserva.getHospedes()));
+        reservaVO.setId(reserva.getId());
+        if(reserva.getPagante() != null)
+            reservaVO.setPaganteVO(this.inversedMap(reserva.getPagante()));
+        reservaVO.setPago(reserva.getPago());
+        if(reserva.getResponsavelCheckIn() != null)
+            reservaVO.setResponsavelCheckIn(this.inversedMapFuncionario(reserva.getResponsavelCheckIn()));
+        if(reserva.getResponsavelCheckOut() != null)
+            reservaVO.setResponsavelCheckOut(this.inversedMapFuncionario(reserva.getResponsavelCheckOut()));
+        if(reserva.getResponsavelReserva() != null)
+            reservaVO.setResponsavelReserva(this.inversedMapFuncionario(reserva.getResponsavelReserva()));
+        return reservaVO;
+    }
      private Endereco mapEndereco(EnderecoVO enderecoVO)
     {
         EnderecoBuilder enderecoBuilder = new EnderecoBuilder();
@@ -198,12 +220,33 @@ public class Controller
                 .addDataInicio(reservaVO.getDataInicio())
                 .addEstrutura(estruturas)
                 .addHospedes(hospedes)
-                .addPagante(this.map(reservaVO.getPaganteVO()))
                 .addPago(reservaVO.getPago())
-                .addResponsavelCheckin(this.mapFuncionario(reservaVO.getResponsavelCheckIn(), null))
-                .addResponsavelReserva(this.mapFuncionario(reservaVO.getResponsavelReserva(), null))
-                .addResposavelCheckOut(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), null))
                 .build();
+        if(reservaVO.getPaganteVO() != null)
+            reserva.setPagante(this.map(reservaVO.getPaganteVO()));
+        if(reservaVO.getResponsavelCheckIn() != null)
+        {
+            if(this.gerenterepo.ehGerente(reservaVO.getResponsavelCheckIn().getId()))
+                reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckIn(), TipoFuncionario.GERENTE));
+            else
+                 reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckIn(), TipoFuncionario.FUNCIONARIO));
+        }
+        if(reservaVO.getResponsavelCheckOut()!= null)
+        {
+            if(this.gerenterepo.ehGerente(reservaVO.getResponsavelCheckOut().getId()))
+                reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.GERENTE));
+            else
+                 reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.FUNCIONARIO));
+        }
+        if(reservaVO.getResponsavelReserva()!= null)
+        {
+            if(this.gerenterepo.ehGerente(reservaVO.getResponsavelReserva().getId()))
+                reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.GERENTE));
+            else
+                 reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.FUNCIONARIO));
+        }
+            
+        
         return reserva;
         
     }
@@ -212,7 +255,7 @@ public class Controller
     {
         ArrayList<ClienteVO> lista = new ArrayList<>();
         for(Cliente x : clientes)
-        {
+        { 
             lista.add(this.inversedMap(x));
         }
         return lista;
@@ -234,6 +277,15 @@ public class Controller
             funcionariosVO.add(this.inversedMapFuncionario(x));
         }
         return funcionariosVO;
+    }
+    private ArrayList<ReservaVO> mapReservas(ArrayList<Reserva> reservas)
+    {
+        ArrayList<ReservaVO> reservasVO = new ArrayList<>();
+        for(Reserva x : reservas)
+        {
+            reservasVO.add(this.inversedMapReserva(x));
+        }
+        return reservasVO;
     }
     public Object execute(OperationEnum en, Object data)
     {
@@ -264,7 +316,10 @@ public class Controller
                     reservarepo.updateReserva(reserva);
                     return true;
             case GETCLIENTEPERCPFORCNPJ:
-                    return this.inversedMap(clienterepo.getClientePorCPForCNPJ((String) data));
+                    if(clienterepo.getClientePorCPForCNPJ((String) data) != null)
+                        return this.inversedMap(clienterepo.getClientePorCPForCNPJ((String) data));
+                    else
+                        return null;
             case ADDRESERVA:
                 reservarepo.addReserva(this.mapReserva((ReservaVO) data));
                 return true;
@@ -286,6 +341,13 @@ public class Controller
             case GETESTRUTURAPERID:
                 Long id = Long.valueOf((int)data);
                 return this.inversedMapEstrutura(estruturarepo.getEstruturaPId(id));
+            case GETRESERVAPERID:
+                Long d = Long.valueOf((String) data);
+                Reserva fsdad = reservarepo.getReservaPId(d);
+                if(fsdad != null)
+                    return this.inversedMapReserva(fsdad);
+                else
+                    return null;
                 
             case GETALLFUNCIONARIO:
                 return this.mapFuncionarios(funcionariorepo.getFuncionarios());
@@ -304,6 +366,10 @@ public class Controller
                     return this.inversedMapFuncionario(f);
                 else
                     return null;
+            case DISPONIBILIDADERESERVA:
+                return this.reservarepo.disponibilidadeReserva(this.mapReserva((ReservaVO) data));
+            case GETALLRESERVA:
+                return this.mapReservas(reservarepo.getReservas());
                 
                 
         }

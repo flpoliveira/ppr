@@ -5,6 +5,7 @@
  */
 package hotel.model.repositories;
 
+import hotel.model.Estrutura;
 import hotel.model.Reserva;
 import java.util.ArrayList;
 
@@ -55,13 +56,33 @@ public class ReservaRepository {
 	public void addReserva(Reserva x) { // ver no diagrama
 		this.Reservas.add(x);
         }
-        public Reserva getReservaPId(int id){
-		for(int i = 0; i < this.Reservas.size(); i++) {
-                    Reserva aux = this.Reservas.get(i);
-                    if(aux.getId().equals(id)){
-                        return aux;
-                    }
-		}
+        
+        public boolean disponibilidadeReserva(Reserva reserva)
+        {
+               for(Reserva x : this.Reservas)
+               {
+
+                   if(reserva.getDataFim().compareTo(x.getDataInicio()) < 0  && x.getDataFim().compareTo(reserva.getDataInicio()) > 0) {
+                   } else {
+                   }                   {
+                       for(Estrutura k : reserva.getEstrutura())
+                       {
+                           for(Estrutura l : x.getEstrutura())
+                           {
+                               if(k.getId() == l.getId())
+                                   return false;
+                           }
+                       }
+                   }
+               }
+               return true;
+        }
+        public Reserva getReservaPId(Long id){
+		for(Reserva x : Reservas)
+                {
+                    if(x.getId() == id && x.isAtivo())
+                        return x;
+                }
                 return null;
 	}
 }
