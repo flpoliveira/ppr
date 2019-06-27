@@ -20,7 +20,7 @@ public class EstruturaRepository {
     public EstruturaRepository() {
         this.Estruturas = new ArrayList<>();
         EstruturaBuilder estrutura = new EstruturaBuilder();
-        Estrutura a = estrutura.addAndar(1).addAtivo(false).addDescricao("Top").addNumero(1).addQtdPessoas(10).addId(Long.decode("2")).addTipoEstrutura(TipoEstrutura.LUXO).build();
+        Estrutura a = estrutura.addAndar(1).addAtivo(false).addDescricao("Top").addNumero(1).addQtdPessoas(10).addId(Long.decode("10")).addTipoEstrutura(TipoEstrutura.LUXO).build();
         this.addEstrutura(a);
     }   
 

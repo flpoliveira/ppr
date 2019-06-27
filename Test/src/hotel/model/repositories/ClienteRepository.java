@@ -27,7 +27,7 @@ public class ClienteRepository {
                 .addPais("Brasil")
                 .addRua("Rua Pedro de campos")
                 .build();
-        Cliente seila = new ClienteBuilder().addNome("Xampson").addEndereco(endereco).addCPF("1234").build(false);
+        Cliente seila = new ClienteBuilder().addNome("Matheus").addEndereco(endereco).addCPF("1234").build(false);
         this.addCliente(seila);
     }
 

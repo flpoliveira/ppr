@@ -1,11 +1,8 @@
 package hotel.model.builders;
 
-import hotel.model.Cliente;
+
 import hotel.model.Estrutura;
-import hotel.model.Funcionario;
-import hotel.model.Gerente;
 import hotel.model.enums.TipoEstrutura;
-import hotel.model.enums.TipoFuncionario;
 
 public class EstruturaBuilder {
     protected Long id;

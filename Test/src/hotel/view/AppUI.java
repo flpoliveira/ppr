@@ -7,7 +7,6 @@ package hotel.view;
 
 import hotel.controller.Controller;
 import hotel.controller.OperationEnum;
-import hotel.model.Cliente;
 import hotel.model.enums.Expediente;
 import hotel.model.enums.TipoEstrutura;
 import hotel.view.vo.ClienteVO;

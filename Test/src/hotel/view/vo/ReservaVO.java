@@ -1,8 +1,6 @@
 package hotel.view.vo;
 
-import hotel.model.Cliente;
-import hotel.model.Estrutura;
-import hotel.model.Funcionario;
+
 import java.util.ArrayList;
 import java.util.Date;
 

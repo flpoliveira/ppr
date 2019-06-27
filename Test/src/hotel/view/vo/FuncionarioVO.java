@@ -5,7 +5,6 @@
  */
 package hotel.view.vo;
 
-import hotel.model.Endereco;
 import hotel.model.enums.Expediente;
 
 /**
