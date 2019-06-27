@@ -19,7 +19,6 @@ public class Test {
         // TODO code application logic here
         AppUI x = new AppUI();
         x.menu();
-       
- 
+     
     }
 }

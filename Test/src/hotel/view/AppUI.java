@@ -186,7 +186,7 @@ public class AppUI
                         }
                     }
                     else
-                        System.out.println("Esta estrutura ja tem uma reserva cadastrada, favor utilizar outras estruturas.");
+                        System.out.println("Esta estrutura ja tem uma reserva cadastrada na data requisitada, favor utilizar outras estruturas ou escolher outra data.");
       
                          
                 }
