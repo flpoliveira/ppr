@@ -53,6 +53,10 @@ public class ReservaRepository {
                 }
             }
         }
+        public Long IdGenerator()
+        {
+            return (long)(this.Reservas.size()+1);
+        }
 	public void addReserva(Reserva x) { // ver no diagrama
 		this.Reservas.add(x);
         }

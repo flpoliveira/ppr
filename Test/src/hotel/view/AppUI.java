@@ -34,6 +34,7 @@ public class AppUI
     private Long enderecoId_Generator = 1L;
     private Long estruturaId_Generator = 1L;
     private Long funcionarioId_Generator = 1L;
+    private Long reservaId_Generator = 1L;
     private FuncionarioVO logado;
     private boolean logadoEhGerente;
     public AppUI()
@@ -67,6 +68,8 @@ public class AppUI
     }
     public boolean addReserva() throws ParseException{
         ReservaVO reserva = new ReservaVO();
+        reserva.setId(reservaId_Generator);
+        reservaId_Generator++;
         System.out.println("Digite a data de inicio da reserva, da seguinte forma dia/mes/ano:");
         String entrada = scanner.next();
         while(!entrada.matches("(0[1-9]|[12]\\d|3[01])/(0[1-9]|1[0-2])/([12]\\d{3})"))
@@ -135,20 +138,15 @@ public class AppUI
         {
             System.out.println("Não há estruturas cadastradas");
         }
-        else
-        {
+        while(true)
+        {   
             System.out.println("---------Lista de Estruturas--------");
             for(EstruturaVO x :estruturas)
             {
                 System.out.println(x.getId()+"- "+x.getDescricao());
             }
-            System.out.println("------------------------------------");
-        }
-        
-        
-        
-        while(true)
-        {
+            System.out.println("------------------------------------\n");
+            
             System.out.println("digite o Id da estrutura, ou 0 para voltar:");
             int entradaS = this.scanner.nextInt();
             if(entradaS == 0)
@@ -161,68 +159,88 @@ public class AppUI
                 return false;
             }
             else
-            {
-                estruturasReserva.add(estrutura);
-                System.out.println("Estrutura #"+ entradaS + " cadastrada a reserva.");
+            {   
+                if(estrutura.isAtivo()){
+                    System.out.println("Este quarto ja contem uma reserva,tecle 1 para escolher outro ou 0 para voltar");
+                    int entradaa = this.scanner.nextInt();
+                    if(entradaa == 0)
+                        break;
+                }
+                else{
+                    estruturasReserva.add(estrutura);
+                    reserva.setEstruturaVO(estruturasReserva);
+                    reserva.setCheckIn(false);
+                    reserva.setCheckOut(false); //n faz sentido fazer uma reserva q já foi feito check out
+                    reserva.setAtivo(true);
+                    if((boolean) this.controller.execute(OperationEnum.DISPONIBILIDADERESERVA, reserva))
+                    {
+                        this.controller.execute(OperationEnum.ADDRESERVA, reserva);
+                        System.out.println("Reserva cadastrada!");
+                        reserva.setResponsavelReserva(this.logado);
+                        System.out.println("Responsavel pela reserva: "+this.logado.getNome());
+                        System.out.println("Deseja cadastrar a mesma reserva em outra estrutura? \n1)sim \n0)voltar");
+                        int perereca = scanner.nextInt();
+                        if(perereca == 0){
+                            break;
+                        }
+                    }
+                    else
+                        System.out.println("Quartos indisponiveis para este agendamento, favor utilizar outras estruturas.");
+      
+                         
+                }
+
             }
            
         }
-        reserva.setEstruturaVO(estruturasReserva);
-        reserva.setCheckIn(false);
-        reserva.setCheckOut(false); //n faz sentido fazer uma reserva q já foi feito check out
-        reserva.setAtivo(true);
-        System.out.println("dshaudhaushduahduashduashd"+this.logado.getId());
-        if((boolean) this.controller.execute(OperationEnum.DISPONIBILIDADERESERVA, reserva))
-        {
-            this.controller.execute(OperationEnum.ADDRESERVA, reserva);
-            System.out.println("Reserva cadastrada!");
-            
-        }
-        else
-            System.out.println("Quartos indisponiveis para este agendamento, favor utilizar outras estruturas.");
-        
-        
-            
-        
-        
-       
-            //falta os funcionários responsáveise a lista de estrutura
-
         return false;
-    }
+}
     
     public boolean consultaReservas()
     {
         ArrayList<ReservaVO> reservas = (ArrayList<ReservaVO>) this.controller.execute(OperationEnum.GETALLRESERVA, null);
-        for(ReservaVO x : reservas)
-        {
-            System.out.println("Reserva ID#"+x.getId());
-        }
-        System.out.println("Digite o ID da reserva, ou 0 para sair");
+       
+        
         ReservaVO reserva = null;
         String entrada;
-        while(reserva == null)
-        {
+        while(true)
+        {   
+            for(ReservaVO x : reservas)
+            {
+                System.out.println("Reserva ID#"+x.getId());
+            }
+            System.out.println("Digite o ID da reserva, ou 0 para sair");
             entrada = scanner.next();
             if(entrada.equals("0"))
                 return false;
             else
             {
-                reserva = (ReservaVO) this.controller.execute(OperationEnum.GETRESERVAPERID, entrada);
+                 reserva = (ReservaVO) this.controller.execute(OperationEnum.GETRESERVAPERID, entrada);
+                 
+                 //
+                 
+                 //Aqui tem que colocar algum tipode consulta da reserva,tipo: Data inicio e fim da reserva, responsavel, cliente MEU PIRU
+                 
+                 
+                 //
                  System.out.println("Para cancelar essa reserva tecle 1, para voltar, tecle 2");
-                if(entrada.equals("1"))
+                 int PEI = scanner.nextInt();
+                 if(PEI == 1)
                 {
                     reserva.setAtivo(false);
+                    System.out.println("Reserva cancelada com sucesso!");
                     this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
+                    System.out.println("1)Consultar outra reserva\n0)Sair...");
+                    int ultima = scanner.nextInt();
+                    if(ultima == 0){
+                        break;
+                    }
                 }
-                else
-                    return false;
+                else break;
             }
            
         }
-        
         return false;
-        
     }
    
     public boolean addEstrutura(){
@@ -266,10 +284,15 @@ public class AppUI
                 break;
 
         }
+        System.out.println("Confirmando os dados da estrutura:");
         System.out.println(estrutura.toString());
-        return (Boolean) this.controller.execute(OperationEnum.ADDESTRUTURA, estrutura);
-        
-        
+        System.out.println("-------------------------------");
+        System.out.println(" 1 - Sim");
+        System.out.println(" 2 - Nao");
+        if(scanner.nextInt() == 1)
+            return (Boolean)this.controller.execute(OperationEnum.ADDESTRUTURA, estrutura);
+        else
+            return false;        
     }
     public boolean addFuncionario()
     {

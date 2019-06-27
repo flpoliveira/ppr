@@ -6,6 +6,7 @@
 package hotel.model.repositories;
 
 import hotel.model.Estrutura;
+import hotel.model.builders.EstruturaBuilder;
 import hotel.model.enums.TipoEstrutura;
 import java.util.ArrayList;
 
@@ -18,7 +19,10 @@ public class EstruturaRepository {
 
     public EstruturaRepository() {
         this.Estruturas = new ArrayList<>();
-    }
+        EstruturaBuilder estrutura = new EstruturaBuilder();
+        Estrutura a = estrutura.addAndar(1).addAtivo(false).addDescricao("Top").addNumero(1).addQtdPessoas(10).addId(Long.decode("2")).addTipoEstrutura(TipoEstrutura.LUXO).build();
+        this.addEstrutura(a);
+    }   
 
 	public ArrayList<Estrutura> getEstruturas() {
 		return this.Estruturas;
