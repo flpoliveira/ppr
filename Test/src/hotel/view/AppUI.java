@@ -149,8 +149,10 @@ public class AppUI
             
             System.out.println("digite o Id da estrutura, ou 0 para voltar:");
             int entradaS = this.scanner.nextInt();
-            if(entradaS == 0)
+            if(entradaS == 0){
+                System.out.println("Cancelando Reserva...");
                 break;
+            }
             EstruturaVO estrutura = (EstruturaVO) this.controller.execute(OperationEnum.GETESTRUTURAPERID, entradaS);
             if(estrutura == null)
             {
@@ -178,14 +180,14 @@ public class AppUI
                         System.out.println("Reserva cadastrada!");
                         reserva.setResponsavelReserva(this.logado);
                         System.out.println("Responsavel pela reserva: "+this.logado.getNome());
-                        System.out.println("Deseja cadastrar a mesma reserva em outra estrutura? \n1)sim \n0)voltar");
-                        int perereca = scanner.nextInt();
-                        if(perereca == 0){
+                        System.out.println("Deseja cadastrar a mesma reserva em outra estrutura? \n\n1)sim \n0)voltar");
+                        int aux = scanner.nextInt();
+                        if(aux == 0){
                             break;
                         }
                     }
                     else
-                        System.out.println("Quartos indisponiveis para este agendamento, favor utilizar outras estruturas.");
+                        System.out.println("Esta estrutura ja tem uma reserva cadastrada, favor utilizar outras estruturas.");
       
                          
                 }
@@ -199,44 +201,47 @@ public class AppUI
     public boolean consultaReservas()
     {
         ArrayList<ReservaVO> reservas = (ArrayList<ReservaVO>) this.controller.execute(OperationEnum.GETALLRESERVA, null);
-       
-        
         ReservaVO reserva = null;
         String entrada;
         while(true)
         {   
-            for(ReservaVO x : reservas)
-            {
-                System.out.println("Reserva ID#"+x.getId());
+            if(reservas.isEmpty()){
+                System.out.println("Nao ha reservas cadastradas no momento, saindo...");
+                return false;
             }
-            System.out.println("Digite o ID da reserva, ou 0 para sair");
+            int cont = 0;
+            for(ReservaVO x : reservas)
+            {   
+                if(x.isAtivo()){
+                    System.out.println("Reserva ID#"+x.getId());
+                    cont ++;
+                }
+            }
+            if(cont == 0){
+                 System.out.println("Nao ha reservas cadastradas no momento, saindo...");
+                return false;
+            }
+            System.out.println("Digite o ID da reserva para ver mais detalhes ou 0 para sair");
             entrada = scanner.next();
             if(entrada.equals("0"))
                 return false;
             else
             {
-                 reserva = (ReservaVO) this.controller.execute(OperationEnum.GETRESERVAPERID, entrada);
-                 
+                reserva = (ReservaVO) this.controller.execute(OperationEnum.GETRESERVAPERID, entrada);
                  //
-                 
-                 //Aqui tem que colocar algum tipode consulta da reserva,tipo: Data inicio e fim da reserva, responsavel, cliente MEU PIRU
-                 
-                 
+                 //Aqui tem que colocar algum tipode consulta da reserva,tipo: Data inicio e fim da reserva, responsavel, cliente MEU Pinto
                  //
-                 System.out.println("Para cancelar essa reserva tecle 1, para voltar, tecle 2");
-                 int PEI = scanner.nextInt();
-                 if(PEI == 1)
-                {
-                    reserva.setAtivo(false);
-                    System.out.println("Reserva cancelada com sucesso!");
-                    this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
-                    System.out.println("1)Consultar outra reserva\n0)Sair...");
-                    int ultima = scanner.nextInt();
-                    if(ultima == 0){
-                        break;
+                    System.out.println("ID: #"+reserva.getId()+"\nData de Inicio: "+reserva.getDataInicio()+"\nData de termino: "+reserva.getDataFim()+"\nEstrutura(s) Utilizada(s)"+reserva.getEstruturaVO());
+                    System.out.println("\nTecle 1 para excluir a reserva ou 0 para voltar.");
+                    int NAGUENTOMAIS = scanner.nextInt();
+                    if(NAGUENTOMAIS == 0){
+                        return false;
                     }
-                }
-                else break;
+                    System.out.println("Reserva cancelada com sucesso!");
+                    reserva.setAtivo(false);
+                    this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
+                    break;
+                
             }
            
         }
