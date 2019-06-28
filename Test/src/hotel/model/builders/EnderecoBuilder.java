@@ -1,6 +1,9 @@
 package hotel.model.builders;
 
+import hotel.model.Cliente;
 import hotel.model.Endereco;
+import hotel.model.Funcionario;
+
 
 public class EnderecoBuilder {
     protected Long id;

@@ -6,9 +6,6 @@
 package hotel.model.repositories;
 
 import hotel.model.Cliente;
-import hotel.model.Endereco;
-import hotel.model.builders.ClienteBuilder;
-import hotel.model.builders.EnderecoBuilder;
 import java.util.ArrayList;
 
 /**
@@ -20,15 +17,6 @@ public class ClienteRepository {
 
         public ClienteRepository() {
         this.Clientes = new ArrayList<>();
-        Endereco endereco = new EnderecoBuilder()
-                .addCep("89230-423")
-                .addCidade("Joinville")
-                .addNumero(124)
-                .addPais("Brasil")
-                .addRua("Rua Pedro de campos")
-                .build();
-        Cliente seila = new ClienteBuilder().addNome("Matheus").addEndereco(endereco).addCPF("1234").build(false);
-        this.addCliente(seila);
     }
 
 	public ArrayList<Cliente> getClientes() {

@@ -19,10 +19,16 @@ public class EstruturaRepository {
 
     public EstruturaRepository() {
         this.Estruturas = new ArrayList<>();
-        EstruturaBuilder estrutura = new EstruturaBuilder();
-        Estrutura a = estrutura.addAndar(1).addAtivo(false).addDescricao("Top").addNumero(1).addQtdPessoas(10).addId(Long.decode("10")).addTipoEstrutura(TipoEstrutura.LUXO).build();
-        this.addEstrutura(a);
-    }   
+        EstruturaBuilder estruturaBuilder = new EstruturaBuilder();
+        Estrutura es = estruturaBuilder
+                .addId(1L)
+                .addDescricao("Quarto grande")
+                .addNumero(12)
+                .addQtdPessoas(12)
+                .addTipoEstrutura(TipoEstrutura.LUXO)
+                .addAndar(1).build();
+        this.Estruturas.add(es);
+    }
 
 	public ArrayList<Estrutura> getEstruturas() {
 		return this.Estruturas;

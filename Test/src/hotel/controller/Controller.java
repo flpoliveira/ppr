@@ -23,6 +23,7 @@ import hotel.view.vo.EnderecoVO;
 import hotel.view.vo.EstruturaVO;
 import hotel.view.vo.FuncionarioVO;
 import hotel.view.vo.ReservaVO;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 /**
@@ -71,15 +72,24 @@ public class Controller
     private FuncionarioVO inversedMapFuncionario(Funcionario funcionario)
     {
         FuncionarioVO funcionarioVO = new FuncionarioVO();
-        funcionarioVO.setCpf(funcionario.getCpf());
-        funcionarioVO.setEnderecoVO(this.inversedMapEndereco(funcionario.getEndereco()));
-        funcionarioVO.setExpediente(funcionario.getExpediente());
-        funcionarioVO.setId(funcionario.getId());
-        funcionarioVO.setNome(funcionario.getNome());
-        funcionarioVO.setRg(funcionario.getRg());
-        funcionarioVO.setSalario(funcionario.getSalario());
-        funcionarioVO.setSenha(funcionario.getSenha());
-        funcionarioVO.setTelefone(funcionario.getTelefone());
+        if(funcionario.getCpf() != null)
+            funcionarioVO.setCpf(funcionario.getCpf());
+        if(funcionario.getEndereco() != null)
+            funcionarioVO.setEnderecoVO(this.inversedMapEndereco(funcionario.getEndereco()));
+        if(funcionario.getExpediente() != null)
+            funcionarioVO.setExpediente(funcionario.getExpediente());
+        if(funcionario.getId() != null)
+            funcionarioVO.setId(funcionario.getId());
+        if(funcionario.getNome() != null)
+            funcionarioVO.setNome(funcionario.getNome());
+        if(funcionario.getRg() != null)
+            funcionarioVO.setRg(funcionario.getRg());
+        if(funcionario.getSalario() != null)
+            funcionarioVO.setSalario(funcionario.getSalario());
+        if(funcionario.getSenha() != null)
+            funcionarioVO.setSenha(funcionario.getSenha());
+        if(funcionario.getTelefone() != null)
+            funcionarioVO.setTelefone(funcionario.getTelefone());
         return funcionarioVO;
     }
     private ClienteVO inversedMap(Cliente cliente)
@@ -152,7 +162,6 @@ public class Controller
         EstruturaBuilder estruturaBuilder = new EstruturaBuilder();
         Estrutura estrutura = estruturaBuilder
                 .addAndar(estruturaVO.getAndar())
-                .addAtivo(estruturaVO.isAtivo())
                 .addDescricao(estruturaVO.getDescricao())
                 .addId(estruturaVO.getId())
                 .addNumero(estruturaVO.getNumero())
@@ -201,63 +210,87 @@ public class Controller
     private Reserva mapReserva(ReservaVO reservaVO)
     {
         ReservaBuilder reservaBuilder = new ReservaBuilder();
-        ArrayList<Estrutura> estruturas = new ArrayList<>();
-        for(EstruturaVO x : reservaVO.getEstruturaVO())
+        
+        if(reservaVO.getId() != null)
         {
-           estruturas.add(this.mapEstrutura(x));
-        }
-        ArrayList<Cliente> hospedes = new ArrayList<>();
-        for(ClienteVO x : reservaVO.getHospedes())
-        {
-            hospedes.add(this.map(x));
-        }
-        Reserva reserva = reservaBuilder
+            ArrayList<Estrutura> estruturas = new ArrayList<>();
+        
+            for(EstruturaVO x : reservaVO.getEstruturaVO())
+            {
+               estruturas.add(this.mapEstrutura(x));
+            }
+            ArrayList<Cliente> hospedes = new ArrayList<>();
+            for(ClienteVO x : reservaVO.getHospedes())
+            {
+                hospedes.add(this.map(x));
+            }
+            
+            Reserva reserva = reservaBuilder
                 .addId(reservaVO.getId())
                 .addAtivo(reservaVO.isAtivo())
-                .addCheckIn(reservaVO.isCheckIn())
-                .addCheckOut(reservaVO.isCheckOut())
-                .addDataFim(reservaVO.getDataFim())
-                .addDataInicio(reservaVO.getDataInicio())
-                .addEstrutura(estruturas)
-                .addHospedes(hospedes)
-                .addPago(reservaVO.getPago())
-                .build();
-        if(reservaVO.getPaganteVO() != null)
-            reserva.setPagante(this.map(reservaVO.getPaganteVO()));
-        if(reservaVO.getResponsavelCheckIn() != null)
-        {
-            if(this.gerenterepo.ehGerente(reservaVO.getResponsavelCheckIn().getId()))
-                reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckIn(), TipoFuncionario.GERENTE));
-            else
-                 reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckIn(), TipoFuncionario.FUNCIONARIO));
+                    .addCheckIn(reservaVO.isCheckIn())
+                    .addCheckOut(reservaVO.isCheckOut())
+                    .addDataFim(reservaVO.getDataFim())
+                    .addDataInicio(reservaVO.getDataInicio())
+                    .addEstrutura(estruturas)
+                    .addHospedes(hospedes)
+                    .addPago(reservaVO.getPago())
+                    .build();
+            if(reservaVO.getPaganteVO() != null)
+                reserva.setPagante(this.map(reservaVO.getPaganteVO()));
+            if(reservaVO.getResponsavelCheckIn() != null)
+            {
+                if(this.gerenterepo.ehGerente(reservaVO.getResponsavelCheckIn().getId()))
+                    reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckIn(), TipoFuncionario.GERENTE));
+                else
+                     reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckIn(), TipoFuncionario.FUNCIONARIO));
+            }
+            if(reservaVO.getResponsavelCheckOut()!= null)
+            {
+                if(this.gerenterepo.ehGerente(reservaVO.getResponsavelCheckOut().getId()))
+                    reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.GERENTE));
+                else
+                     reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.FUNCIONARIO));
+            }
+            if(reservaVO.getResponsavelReserva()!= null)
+            {
+                if(this.gerenterepo.ehGerente(reservaVO.getResponsavelReserva().getId()))
+                {
+                    reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.GERENTE));
+                }
+                else
+                {
+                    reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.FUNCIONARIO));
+
+                }
+            }
+            return reserva;
         }
-        if(reservaVO.getResponsavelCheckOut()!= null)
+        else
         {
-            if(this.gerenterepo.ehGerente(reservaVO.getResponsavelCheckOut().getId()))
-                reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.GERENTE));
-            else
-                 reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.FUNCIONARIO));
+            Reserva reserva = reservaBuilder
+                    .addDataInicio(reservaVO.getDataInicio())
+                    .addDataFim(reservaVO.getDataFim())
+                    .build();
+            return reserva;
         }
-        if(reservaVO.getResponsavelReserva()!= null)
-        {
-            if(this.gerenterepo.ehGerente(reservaVO.getResponsavelReserva().getId()))
-                reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.GERENTE));
-            else
-                 reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.FUNCIONARIO));
-        }
-            
+      
         
-        return reserva;
+        
         
     }
    
     private ArrayList<ClienteVO> mapClientes(ArrayList<Cliente> clientes)
     {
         ArrayList<ClienteVO> lista = new ArrayList<>();
-        for(Cliente x : clientes)
-        { 
-            lista.add(this.inversedMap(x));
+        if(clientes != null)
+        {
+            for(Cliente x : clientes)
+            { 
+                lista.add(this.inversedMap(x));
+            }
         }
+        
         return lista;
     }
     private ArrayList<EstruturaVO> mapEstruturas(ArrayList<Estrutura> estruturas)
@@ -283,7 +316,8 @@ public class Controller
         ArrayList<ReservaVO> reservasVO = new ArrayList<>();
         for(Reserva x : reservas)
         {
-            reservasVO.add(this.inversedMapReserva(x));
+            if(x.isAtivo())
+                reservasVO.add(this.inversedMapReserva(x));
         }
         return reservasVO;
     }
@@ -339,7 +373,7 @@ public class Controller
             case GETALLESTRUTURA:
                 return this.mapEstruturas(estruturarepo.getEstruturas());
             case GETESTRUTURAPERID:
-                Long id = Long.valueOf((int)data);
+                Long id = Long.valueOf((String)data);
                 return this.inversedMapEstrutura(estruturarepo.getEstruturaPId(id));
             case GETRESERVAPERID:
                 Long d = Long.valueOf((String) data);
@@ -366,10 +400,23 @@ public class Controller
                     return this.inversedMapFuncionario(f);
                 else
                     return null;
-            case DISPONIBILIDADERESERVA:
-                return this.reservarepo.disponibilidadeReserva(this.mapReserva((ReservaVO) data));
+            case GETALLESTRUTURASDISPONIVEIS:
+                ArrayList<Estrutura> estruturas = this.estruturarepo.getEstruturas();
+                Reserva r = this.mapReserva((ReservaVO) data);
+                ArrayList<EstruturaVO> estruturasVO = new ArrayList<EstruturaVO>();
+                for(Estrutura x : estruturas)
+                {
+                    if(this.reservarepo.disponibilidadeReserva(r, x))
+                    {
+                       estruturasVO.add(this.inversedMapEstrutura(x));
+                    }
+                }
+                return estruturasVO;
             case GETALLRESERVA:
-                return this.mapReservas(reservarepo.getReservas());
+                if(reservarepo.getReservas().size() == 0)
+                    return null;
+                else
+                    return this.mapReservas(reservarepo.getReservas());
                 
                 
         }

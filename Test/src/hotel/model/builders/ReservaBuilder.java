@@ -3,7 +3,9 @@ package hotel.model.builders;
 import hotel.model.Cliente;
 import hotel.model.Estrutura;
 import hotel.model.Funcionario;
+import hotel.model.Gerente;
 import hotel.model.Reserva;
+import hotel.model.enums.TipoFuncionario;
 import java.util.ArrayList;
 import java.util.Date;
 

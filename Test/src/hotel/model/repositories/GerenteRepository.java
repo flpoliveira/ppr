@@ -33,7 +33,7 @@ public class GerenteRepository {
                 .addRua("Rua Pedro de campos")
                 .build();
         Gerente admin = (Gerente) funcionarioBuilder
-                .addId(Long.decode("24"))
+                .addId(Long.MAX_VALUE)
                 .addCpf("admin")
                 .addEndereco(endereco)
                 .addSalario(99999999d)

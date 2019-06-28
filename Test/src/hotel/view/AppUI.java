@@ -7,6 +7,7 @@ package hotel.view;
 
 import hotel.controller.Controller;
 import hotel.controller.OperationEnum;
+import hotel.model.Cliente;
 import hotel.model.enums.Expediente;
 import hotel.model.enums.TipoEstrutura;
 import hotel.view.vo.ClienteVO;
@@ -31,7 +32,7 @@ public class AppUI
     private Scanner scanner;
     private Long clienteId_Generator = 1L;
     private Long enderecoId_Generator = 1L;
-    private Long estruturaId_Generator = 1L;
+    private Long estruturaId_Generator = 2L;
     private Long funcionarioId_Generator = 1L;
     private Long reservaId_Generator = 1L;
     private FuncionarioVO logado;
@@ -66,9 +67,9 @@ public class AppUI
         return cliente;
     }
     public boolean addReserva() throws ParseException{
+        
         ReservaVO reserva = new ReservaVO();
-        reserva.setId(reservaId_Generator);
-        reservaId_Generator++;
+    
         System.out.println("Digite a data de inicio da reserva, da seguinte forma dia/mes/ano:");
         String entrada = scanner.next();
         while(!entrada.matches("(0[1-9]|[12]\\d|3[01])/(0[1-9]|1[0-2])/([12]\\d{3})"))
@@ -94,8 +95,58 @@ public class AppUI
         Date data_fim = formatorfim.parse(entrada);
         reserva.setDataFim(data_fim);
         
-        ArrayList<ClienteVO> clientes = new ArrayList<>();
-       
+        System.out.println("Selecione as estruturas que irão compor a reserva:");
+        ArrayList<EstruturaVO> estruturasDisponiveis = (ArrayList<EstruturaVO>) this.controller.execute(OperationEnum.GETALLESTRUTURASDISPONIVEIS, reserva);
+        ArrayList<EstruturaVO> estruturasReserva = new ArrayList<EstruturaVO>();
+        if(estruturasDisponiveis.size() == 0)
+        {
+            System.out.println("Nenhum quarto disponivel para esta data!");
+            return false;
+        }
+        for(EstruturaVO x : estruturasDisponiveis)
+        {
+            if(x.isAtivo())
+                System.out.println(x.getId() + " - " + x.getId() );
+            
+        }
+        while(true)
+        {
+            System.out.println("Digite o Id de uma das estruturas ou 0 para sair");
+            entrada = this.scanner.next();
+            if(entrada.equals("0"))
+                break;
+            else
+            {
+                EstruturaVO y = (EstruturaVO) this.controller.execute(OperationEnum.GETESTRUTURAPERID, entrada);
+                if(y == null)
+                    System.out.println("Id não identificado.");
+                else
+                {
+                    
+                    boolean aux2 = true;
+                    for(EstruturaVO aux : estruturasReserva)
+                    {
+                        if(aux.getId() == y.getId())
+                        {
+                            System.out.println("Essa estrutura ja foi cadastrada para esta reserva");
+                            aux2 = false;
+                        }
+                    }
+                    if(aux2)
+                    {
+                        System.out.println("A seguinte estrutura foi adicionada a reserva:");
+                        estruturasReserva.add(y);
+                        System.out.println(y.toString());
+                    }
+                        
+                }
+                    
+            }
+        }
+        reserva.setEstruturaVO(estruturasReserva);
+        reserva.setId(reservaId_Generator);
+        reservaId_Generator++;
+        ArrayList<ClienteVO> clientes = new ArrayList<ClienteVO>();
         while(true)
         {
             System.out.println("Dados do hospede:");
@@ -110,11 +161,10 @@ public class AppUI
                 break;
         }
         reserva.setHospedes(clientes);
-         
         reserva.setResponsavelReserva(logado);
+        System.out.println("**Responsavel da reserva "+ reserva.getResponsavelReserva().getNome());
         System.out.println("Digite o CPF ou CNPJ do cliente pagante:");
         entrada = this.scanner.next();
-        
         ClienteVO clientePagante = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, entrada);
         reserva.setPago(false);
         while(clientePagante == null)
@@ -130,121 +180,70 @@ public class AppUI
             reserva.setPaganteVO(clientePagante);
             reserva.setPago(true);
         }
-        System.out.println("Selecione as estruturas para a reserva:");
-        ArrayList<EstruturaVO> estruturasReserva = new ArrayList<>();
-        ArrayList<EstruturaVO> estruturas = (ArrayList<EstruturaVO>) this.controller.execute(OperationEnum.GETALLESTRUTURA, null);
-        if(estruturas.size() == 0)
-        {
-            System.out.println("Não há estruturas cadastradas");
-        }
-        while(true)
-        {   
-            System.out.println("---------Lista de Estruturas--------");
-            for(EstruturaVO x :estruturas)
-            {
-                System.out.println(x.getId()+"- "+x.getDescricao());
-            }
-            System.out.println("------------------------------------\n");
-            
-            System.out.println("digite o Id da estrutura, ou 0 para voltar:");
-            int entradaS = this.scanner.nextInt();
-            if(entradaS == 0){
-                System.out.println("Cancelando Reserva...");
-                break;
-            }
-            EstruturaVO estrutura = (EstruturaVO) this.controller.execute(OperationEnum.GETESTRUTURAPERID, entradaS);
-            if(estrutura == null)
-            {
-                System.out.println("Estrutura não encontrada.");
-                System.out.println("Cancelando a reserva!");
-                return false;
-            }
-            else
-            {   
-                if(estrutura.isAtivo()){
-                    System.out.println("Este quarto ja contem uma reserva,tecle 1 para escolher outro ou 0 para voltar");
-                    int entradaa = this.scanner.nextInt();
-                    if(entradaa == 0)
-                        break;
-                }
-                else{
-                    estruturasReserva.add(estrutura);
-                    reserva.setEstruturaVO(estruturasReserva);
-                    reserva.setCheckIn(false);
-                    reserva.setCheckOut(false); //n faz sentido fazer uma reserva q já foi feito check out
-                    reserva.setAtivo(true);
-                    if((boolean) this.controller.execute(OperationEnum.DISPONIBILIDADERESERVA, reserva))
-                    {
-                        this.controller.execute(OperationEnum.ADDRESERVA, reserva);
-                        System.out.println("Reserva cadastrada!");
-                        reserva.setResponsavelReserva(this.logado);
-                        System.out.println("Responsavel pela reserva: "+this.logado.getNome());
-                        System.out.println("Deseja cadastrar a mesma reserva em outra estrutura? \n\n1)sim \n0)voltar");
-                        int aux = scanner.nextInt();
-                        if(aux == 0){
-                            break;
-                        }
-                    }
-                    else
-                        System.out.println("Esta estrutura ja tem uma reserva cadastrada na data requisitada, favor utilizar outras estruturas ou escolher outra data.");
-      
-                         
-                }
-
-            }
-           
-        }
+        reserva.setCheckIn(false);
+        reserva.setCheckOut(false); 
+        reserva.setAtivo(true);
+        this.controller.execute(OperationEnum.ADDRESERVA, reserva);
+        System.out.println("Reserva cadastrada");
         return false;
-}
+    }
     
     public boolean consultaReservas()
     {
         ArrayList<ReservaVO> reservas = (ArrayList<ReservaVO>) this.controller.execute(OperationEnum.GETALLRESERVA, null);
+        if(reservas == null || reservas.size() == 0)
+        {
+            System.out.println("nenhuma reserva cadastrada");
+            return false;
+        }
+            
+        for(ReservaVO x : reservas)
+        {
+            System.out.println("Reserva ID#"+x.getId());
+        }
+        System.out.println("Digite o ID da reserva, ou 0 para sair");
         ReservaVO reserva = null;
         String entrada;
-        while(true)
-        {   
-            if(reservas.isEmpty()){
-                System.out.println("Nao ha reservas cadastradas no momento, saindo...");
-                return false;
-            }
-            int cont = 0;
-            for(ReservaVO x : reservas)
-            {   
-                if(x.isAtivo()){
-                    System.out.println("Reserva ID#"+x.getId());
-                    cont ++;
-                }
-            }
-            if(cont == 0){
-                 System.out.println("Nao ha reservas cadastradas no momento, saindo...");
-                return false;
-            }
-            System.out.println("Digite o ID da reserva para ver mais detalhes ou 0 para sair");
+        while(reserva == null)
+        {
             entrada = scanner.next();
             if(entrada.equals("0"))
                 return false;
             else
             {
                 reserva = (ReservaVO) this.controller.execute(OperationEnum.GETRESERVAPERID, entrada);
-                 //
-                 //Aqui tem que colocar algum tipode consulta da reserva,tipo: Data inicio e fim da reserva, responsavel, cliente MEU Pinto
-                 //
-                    System.out.println("ID: #"+reserva.getId()+"\nData de Inicio: "+reserva.getDataInicio()+"\nData de termino: "+reserva.getDataFim()+"\nEstrutura(s) Utilizada(s)"+reserva.getEstruturaVO());
-                    System.out.println("\nTecle 1 para excluir a reserva ou 0 para voltar.");
-                    int NAGUENTOMAIS = scanner.nextInt();
-                    if(NAGUENTOMAIS == 0){
-                        return false;
+                if(reserva != null)
+                {
+                    System.out.println(reserva.toString());
+                    System.out.println("Para cancelar essa reserva tecle 1,  para fazer o Check In tecle 2, para fazer o CheckOut tecle 3, para voltar tecle 0");
+                    entrada = scanner.next();
+                    if(entrada.equals("1"))
+                    {
+                        reserva.setAtivo(false);
+                        this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
                     }
-                    System.out.println("Reserva cancelada com sucesso!");
-                    reserva.setAtivo(false);
-                    this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
-                    break;
+                    else if(entrada.equals("2"))
+                    {
+                        reserva.setCheckIn(true);
+                        reserva.setResponsavelCheckIn(logado);
+                        this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
+                    }
+                    else if(entrada.equals("3"))
+                    {
+                        reserva.setCheckOut(true);
+                        reserva.setResponsavelCheckOut(logado);
+                        this.controller.execute(OperationEnum.UPDATERESERVA, reserva);
+                    }
+                    else
+                        return false;
+                }
                 
             }
            
         }
+        
         return false;
+        
     }
    
     public boolean addEstrutura(){
@@ -258,16 +257,7 @@ public class AppUI
         this.scanner.nextLine();
         System.out.println("Digite a descrição da estrutura:");
         estrutura.setDescricao(this.scanner.nextLine());
-        System.out.println("A estrutura está ativa?\n 1- Sim\n 2 - Não");
-        switch(this.scanner.nextInt())
-        {
-            case 1:
-                estrutura.setAtivo(true);
-                break;
-            default:
-                estrutura.setAtivo(false);  
-                break;
-        }
+       
         System.out.println("Digite a quantidade de pessoas:");
         estrutura.setQtdPessoas(this.scanner.nextInt());
         System.out.println("Qual o tipo da estrutura?\n 1 - Standart\n 2 - Classe Média\n 3 - Luxo\n 4 - Super Luxo");
@@ -288,15 +278,10 @@ public class AppUI
                 break;
 
         }
-        System.out.println("Confirmando os dados da estrutura:");
         System.out.println(estrutura.toString());
-        System.out.println("-------------------------------");
-        System.out.println(" 1 - Sim");
-        System.out.println(" 2 - Nao");
-        if(scanner.nextInt() == 1)
-            return (Boolean)this.controller.execute(OperationEnum.ADDESTRUTURA, estrutura);
-        else
-            return false;        
+        return (Boolean) this.controller.execute(OperationEnum.ADDESTRUTURA, estrutura);
+        
+        
     }
     public boolean addFuncionario()
     {
@@ -567,7 +552,8 @@ public class AppUI
         {
             if(!this.login())
                 return false;
-            System.out.println("Bem vindo "+ this.logado.getNome());
+            System.out.println("Voce esta logado como: "+ this.logado.getNome());
+            System.out.println(this.logado.toString());
             int entrada = 0;
             while(true)
             {

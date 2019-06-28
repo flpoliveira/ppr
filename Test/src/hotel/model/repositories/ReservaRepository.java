@@ -7,7 +7,11 @@ package hotel.model.repositories;
 
 import hotel.model.Estrutura;
 import hotel.model.Reserva;
+import hotel.model.builders.ReservaBuilder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -18,6 +22,24 @@ public class ReservaRepository {
 
     public ReservaRepository() {
         this.Reservas = new ArrayList<>();
+        
+    }
+    public ReservaRepository(Estrutura estrutura) throws ParseException
+    {
+        this.Reservas = new ArrayList<>();
+        ReservaBuilder reservaBuilder = new ReservaBuilder();
+        SimpleDateFormat formator = new SimpleDateFormat("dd/MM/yyyy");
+        Date dataInicio = formator.parse("12/11/2019");
+        Date dataFim = formator.parse("13/11/2019");
+        ArrayList<Estrutura> estruturas = new ArrayList<Estrutura>();
+        estruturas.add(estrutura);
+        Reserva reserva = reservaBuilder.addId(5L)
+                .addDataInicio(dataInicio)
+                .addDataFim(dataFim)
+                .addEstrutura(estruturas)
+                .build();
+        this.Reservas.add(reserva);
+        
     }
 
 	public ArrayList<Reserva> getReservas() {
@@ -53,35 +75,35 @@ public class ReservaRepository {
                 }
             }
         }
-        public Long IdGenerator()
-        {
-            return (long)(this.Reservas.size()+1);
-        }
 	public void addReserva(Reserva x) { // ver no diagrama
 		this.Reservas.add(x);
         }
         
-        public boolean disponibilidadeReserva(Reserva reserva)
+        public boolean disponibilidadeReserva(Reserva reserva, Estrutura k)
         {
+            //System.out.println("Estou aqui");
                for(Reserva x : this.Reservas)
                {
-
-                   if(reserva.getDataFim().compareTo(x.getDataInicio()) < 0  && x.getDataFim().compareTo(reserva.getDataInicio()) > 0) {
-                   } else {
-                   }                   {
-                       for(Estrutura k : reserva.getEstrutura())
+                  //System.out.println("EstouAaqui2");
+                   //System.out.println(reserva.getDataFim().compareTo(x.getDataInicio()));
+                   //System.out.println(x.getDataFim().compareTo(reserva.getDataInicio()));
+                   if(reserva.getDataFim().compareTo(x.getDataInicio()) > 0  && x.getDataFim().compareTo(reserva.getDataInicio()) > 0) 
+                   {
+                       //System.out.println("Conflito de datas encontrado:");
+                       for(Estrutura y : x.getEstrutura())
                        {
-                           for(Estrutura l : x.getEstrutura())
+                           if(k.getId() == y.getId())
                            {
-                               if(k.getId() == l.getId())
-                                   return false;
+                               System.out.println("**Estrutura " + y.getId() + " já está sendo usada para esta data");
+                               return false;
                            }
+                           //if ($dtNF > $dtBISiga && $dtNI < $dtBFSiga)
+                               
                        }
                    }
                }
                return true;
         }
-       
         public Reserva getReservaPId(Long id){
 		for(Reserva x : Reservas)
                 {

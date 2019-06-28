@@ -1,6 +1,8 @@
 
 package hotel.view.vo;
 
+import hotel.model.Endereco;
+
 public class ClienteVO {
 
     private Long id;
