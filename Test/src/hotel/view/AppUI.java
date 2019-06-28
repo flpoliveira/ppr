@@ -105,7 +105,7 @@ public class AppUI
         for(EstruturaVO x : estruturasDisponiveis)
         {
             if(x.isAtivo())
-                System.out.println(x.getId() + " - " + x.getId());
+                System.out.println(x.getId() + " - " + x.getDescricao());
             
         }
         while(true)
