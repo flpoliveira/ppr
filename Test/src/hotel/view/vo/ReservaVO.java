@@ -129,4 +129,53 @@ public class ReservaVO {
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
     }
+    public String toString()
+    {
+        String x = "Reserva ID#"+this.getId();
+        x = x + "\nData De Inicio:"+this.getDataInicio().toString();
+        x = x + "\nData De Fim:"+this.getDataFim().toString();
+        if(pago)
+        {
+            x = x+"\nPago por:";
+            x = x + pagante.toString();
+                    
+        }
+        else
+            x = x +"\nAinda não foi paga!";
+        if(hospedes != null && hospedes.size() > 0 )
+        {
+            System.out.println("Possui os seguintes hospedes:");
+            int cont = 1;
+            for(ClienteVO hospede : hospedes)
+            {
+                x = x + "\n"+String.valueOf(cont) + " - " + hospede.getNome();
+                cont++;
+            }
+        }
+        if(checkIn)
+        {
+            x = x + "\nCheck in marcado pelo funcionario:";
+            x = x + responsavelCheckIn.getNome();
+        }
+        if(checkOut)
+        {
+            x = x + "\nCheck Out marcado pelo funcionario:";
+            x = x + responsavelCheckOut.getNome();
+        }
+        x = x +"\nResponsavel que criou a reserva:"+responsavelReserva.getNome();
+        if(estrutura != null & estrutura.size() > 0)
+        {
+            x = x + "\n As seguintes estruturas foram adicionadas para esta reserva:";
+            for(EstruturaVO y : estrutura)
+            {
+                x = x + "\n============================\n";
+                x = x + "\n" + y.toString();
+                x = x + "\n============================\n";
+                
+            }
+        }
+        
+  
+        return x;
+    }
 }

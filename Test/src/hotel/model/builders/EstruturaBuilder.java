@@ -69,7 +69,7 @@ public class EstruturaBuilder {
         estrutura.setAndar(this.andar);
         estrutura.setNumero(this.numero);
         estrutura.setDescricao(this.descricao);
-        estrutura.setAtivo(this.ativo);
+        estrutura.setAtivo(true);
         estrutura.setQtdPessoas(this.qtdPessoas);
         estrutura.setTipo(this.tipo);
         
