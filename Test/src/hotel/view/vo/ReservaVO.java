@@ -144,6 +144,7 @@ public class ReservaVO {
             x = x +"\nAinda não foi paga!";
         if(hospedes != null && hospedes.size() > 0 )
         {
+            x = x + "\n============================\n";
             System.out.println("Possui os seguintes hospedes:");
             int cont = 1;
             for(ClienteVO hospede : hospedes)
@@ -151,6 +152,7 @@ public class ReservaVO {
                 x = x + "\n"+String.valueOf(cont) + " - " + hospede.getNome();
                 cont++;
             }
+            x = x + "\n============================\n";
         }
         if(checkIn)
         {

@@ -167,6 +167,7 @@ public class AppUI
         entrada = this.scanner.next();
         ClienteVO clientePagante = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, entrada);
         reserva.setPago(false);
+        
         while(clientePagante == null)
         {
             System.out.println("Cliente não encontrado, ou ainda não cadastrado, deseja cadastra-lo?");
@@ -177,8 +178,11 @@ public class AppUI
                 break;
             this.addCliente();
             clientePagante = (ClienteVO) this.controller.execute(OperationEnum.GETCLIENTEPERCPFORCNPJ, entrada);
-            reserva.setPaganteVO(clientePagante);
+        }
+        if(clientePagante != null)
+        {
             reserva.setPago(true);
+            reserva.setPaganteVO(clientePagante);
         }
         reserva.setCheckIn(false);
         reserva.setCheckOut(false); 

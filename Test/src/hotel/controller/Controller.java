@@ -248,19 +248,19 @@ public class Controller
             if(reservaVO.getResponsavelCheckOut()!= null)
             {
                 if(this.gerenterepo.ehGerente(reservaVO.getResponsavelCheckOut().getId()))
-                    reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.GERENTE));
+                    reserva.setResponsavelCheckOut(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.GERENTE));
                 else
-                     reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.FUNCIONARIO));
+                     reserva.setResponsavelCheckOut(this.mapFuncionario(reservaVO.getResponsavelCheckOut(), TipoFuncionario.FUNCIONARIO));
             }
             if(reservaVO.getResponsavelReserva()!= null)
             {
                 if(this.gerenterepo.ehGerente(reservaVO.getResponsavelReserva().getId()))
                 {
-                    reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.GERENTE));
+                    reserva.setResponsavelReserva(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.GERENTE));
                 }
                 else
                 {
-                    reserva.setResponsavelCheckIn(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.FUNCIONARIO));
+                    reserva.setResponsavelReserva(this.mapFuncionario(reservaVO.getResponsavelReserva(), TipoFuncionario.FUNCIONARIO));
 
                 }
             }
