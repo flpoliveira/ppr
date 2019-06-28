@@ -7,7 +7,6 @@ package hotel.view;
 
 import hotel.controller.Controller;
 import hotel.controller.OperationEnum;
-import hotel.model.Cliente;
 import hotel.model.enums.Expediente;
 import hotel.model.enums.TipoEstrutura;
 import hotel.view.vo.ClienteVO;
@@ -106,18 +105,18 @@ public class AppUI
         for(EstruturaVO x : estruturasDisponiveis)
         {
             if(x.isAtivo())
-                System.out.println(x.getId() + " - " + x.getId() );
+                System.out.println(x.getId() + " - " + x.getId());
             
         }
         while(true)
         {
             System.out.println("Digite o Id de uma das estruturas ou 0 para sair");
-            entrada = this.scanner.next();
-            if(entrada.equals("0"))
+            Long entradas = this.scanner.nextLong();
+            if(entradas == 0)
                 break;
             else
             {
-                EstruturaVO y = (EstruturaVO) this.controller.execute(OperationEnum.GETESTRUTURAPERID, entrada);
+                EstruturaVO y = (EstruturaVO) this.controller.execute(OperationEnum.GETESTRUTURAPERID, entradas);
                 if(y == null)
                     System.out.println("Id não identificado.");
                 else
@@ -137,6 +136,7 @@ public class AppUI
                         System.out.println("A seguinte estrutura foi adicionada a reserva:");
                         estruturasReserva.add(y);
                         System.out.println(y.toString());
+                        break;
                     }
                         
                 }
@@ -470,7 +470,7 @@ public class AppUI
         while(true)
         {
             System.out.println("Para ver mais sobre alguma estrutura, digite o seu Id, ou 0 para voltar:");
-            int entrada = this.scanner.nextInt();
+            Long entrada = this.scanner.nextLong();
             if(entrada == 0)
                 break;
             EstruturaVO estrutura = (EstruturaVO) this.controller.execute(OperationEnum.GETESTRUTURAPERID, entrada);

@@ -1,8 +1,6 @@
 package hotel.view.vo;
 
-import hotel.model.Cliente;
-import hotel.model.Estrutura;
-import hotel.model.Funcionario;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -144,8 +142,8 @@ public class ReservaVO {
             x = x +"\nAinda não foi paga!";
         if(hospedes != null && hospedes.size() > 0 )
         {
+            x = x +"\n\nPossui os seguintes hospedes:";
             x = x + "\n============================\n";
-            System.out.println("Possui os seguintes hospedes:");
             int cont = 1;
             for(ClienteVO hospede : hospedes)
             {
@@ -153,7 +151,8 @@ public class ReservaVO {
                 cont++;
             }
             x = x + "\n============================\n";
-        }
+        }            int cont = 1;
+
         if(checkIn)
         {
             x = x + "\nCheck in marcado pelo funcionario:";
@@ -164,10 +163,10 @@ public class ReservaVO {
             x = x + "\nCheck Out marcado pelo funcionario:";
             x = x + responsavelCheckOut.getNome();
         }
-        x = x +"\nResponsavel que criou a reserva:"+responsavelReserva.getNome();
+        x = x +"\nResponsavel que criou a reserva:"+responsavelReserva.getNome()+"\n";
         if(estrutura != null & estrutura.size() > 0)
         {
-            x = x + "\n As seguintes estruturas foram adicionadas para esta reserva:";
+            x = x + "\nAs seguintes estruturas foram adicionadas para esta reserva:";
             for(EstruturaVO y : estrutura)
             {
                 x = x + "\n============================\n";

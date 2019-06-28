@@ -23,7 +23,6 @@ import hotel.view.vo.EnderecoVO;
 import hotel.view.vo.EstruturaVO;
 import hotel.view.vo.FuncionarioVO;
 import hotel.view.vo.ReservaVO;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 /**
@@ -373,7 +372,7 @@ public class Controller
             case GETALLESTRUTURA:
                 return this.mapEstruturas(estruturarepo.getEstruturas());
             case GETESTRUTURAPERID:
-                Long id = Long.valueOf((String)data);
+                Long id = Long.valueOf((Long)data);
                 return this.inversedMapEstrutura(estruturarepo.getEstruturaPId(id));
             case GETRESERVAPERID:
                 Long d = Long.valueOf((String) data);
@@ -417,8 +416,6 @@ public class Controller
                     return null;
                 else
                     return this.mapReservas(reservarepo.getReservas());
-                
-                
         }
         return null;
     }
